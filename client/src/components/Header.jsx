@@ -20,6 +20,7 @@ export default function Header() {
   const { theme } = useSelector((state) => state.theme);
   const [searchTerm, setSearchTerm] = useState('');
 
+  //
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get('searchTerm');
@@ -28,6 +29,7 @@ export default function Header() {
     }
   }, [location.search]);
 
+  //
   const handleSignout = async () => {
     try {
       const res = await fetch('/api/user/signout', {
@@ -39,11 +41,13 @@ export default function Header() {
       } else {
         dispatch(signoutSuccess());
       }
+
     } catch (error) {
       console.log(error.message);
     }
   };
 
+  //
   const handleSubmit = (e) => {
     e.preventDefault();
     const urlParams = new URLSearchParams(location.search);

@@ -1,4 +1,6 @@
-import { Alert, Button, Modal, TextInput, Textarea } from 'flowbite-react';
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
+import { Alert, Button, Modal, Textarea } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -6,13 +8,18 @@ import Comment from './Comment';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 export default function CommentSection({ postId }) {
+
   const { currentUser } = useSelector((state) => state.user);
+
   const [comment, setComment] = useState('');
   const [commentError, setCommentError] = useState(null);
   const [comments, setComments] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [commentToDelete, setCommentToDelete] = useState(null);
+
   const navigate = useNavigate();
+
+  //
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (comment.length > 200) {
@@ -36,11 +43,13 @@ export default function CommentSection({ postId }) {
         setCommentError(null);
         setComments([data, ...comments]);
       }
+
     } catch (error) {
       setCommentError(error.message);
     }
   };
 
+  //
   useEffect(() => {
     const getComments = async () => {
       try {
@@ -49,6 +58,7 @@ export default function CommentSection({ postId }) {
           const data = await res.json();
           setComments(data);
         }
+        
       } catch (error) {
         console.log(error.message);
       }
@@ -56,6 +66,7 @@ export default function CommentSection({ postId }) {
     getComments();
   }, [postId]);
 
+  //
   const handleLike = async (commentId) => {
     try {
       if (!currentUser) {
@@ -79,11 +90,13 @@ export default function CommentSection({ postId }) {
           )
         );
       }
+
     } catch (error) {
       console.log(error.message);
     }
   };
 
+  //
   const handleEdit = async (comment, editedContent) => {
     setComments(
       comments.map((c) =>
@@ -92,6 +105,7 @@ export default function CommentSection({ postId }) {
     );
   };
 
+  //
   const handleDelete = async (commentId) => {
     setShowModal(false);
     try {
@@ -110,20 +124,15 @@ export default function CommentSection({ postId }) {
       console.log(error.message);
     }
   };
+
+  
   return (
     <div className='max-w-2xl mx-auto w-full p-3'>
       {currentUser ? (
         <div className='flex items-center gap-1 my-5 text-gray-500 text-sm'>
           <p>Signed in as:</p>
-          <img
-            className='h-5 w-5 object-cover rounded-full'
-            src={currentUser.profilePicture}
-            alt=''
-          />
-          <Link
-            to={'/dashboard?tab=profile'}
-            className='text-xs text-cyan-600 hover:underline'
-          >
+          <img className='h-5 w-5 object-cover rounded-full' src={currentUser.profilePicture} alt='' />
+          <Link to={'/dashboard?tab=profile'} className='text-xs text-cyan-600 hover:underline' >
             @{currentUser.username}
           </Link>
         </div>
@@ -140,13 +149,7 @@ export default function CommentSection({ postId }) {
           onSubmit={handleSubmit}
           className='border border-teal-500 rounded-md p-3'
         >
-          <Textarea
-            placeholder='Add a comment...'
-            rows='3'
-            maxLength='200'
-            onChange={(e) => setComment(e.target.value)}
-            value={comment}
-          />
+          <Textarea placeholder='Add a comment...' rows='3' maxLength='200' onChange={(e) => setComment(e.target.value)} value={comment} />
           <div className='flex justify-between items-center mt-5'>
             <p className='text-gray-500 text-xs'>
               {200 - comment.length} characters remaining
@@ -186,12 +189,7 @@ export default function CommentSection({ postId }) {
           ))}
         </>
       )}
-      <Modal
-        show={showModal}
-        onClose={() => setShowModal(false)}
-        popup
-        size='md'
-      >
+      <Modal show={showModal} onClose={() => setShowModal(false)} popup size='md' >
         <Modal.Header />
         <Modal.Body>
           <div className='text-center'>
@@ -200,11 +198,8 @@ export default function CommentSection({ postId }) {
               Are you sure you want to delete this comment?
             </h3>
             <div className='flex justify-center gap-4'>
-              <Button
-                color='failure'
-                onClick={() => handleDelete(commentToDelete)}
-              >
-                Yes, I'm sure
+              <Button color='failure' onClick={() => handleDelete(commentToDelete)} >
+                Yes, Im sure
               </Button>
               <Button color='gray' onClick={() => setShowModal(false)}>
                 No, cancel

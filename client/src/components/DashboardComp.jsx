@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import {
-  HiAnnotation,
-  HiArrowNarrowUp,
-  HiDocumentText,
-  HiOutlineUserGroup,
-} from 'react-icons/hi';
+import { HiAnnotation, HiArrowNarrowUp, HiDocumentText, HiOutlineUserGroup, } from 'react-icons/hi';
 import { Button, Table } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 
 export default function DashboardComp() {
+
   const [users, setUsers] = useState([]);
   const [comments, setComments] = useState([]);
   const [posts, setPosts] = useState([]);
@@ -19,8 +15,12 @@ export default function DashboardComp() {
   const [lastMonthUsers, setLastMonthUsers] = useState(0);
   const [lastMonthPosts, setLastMonthPosts] = useState(0);
   const [lastMonthComments, setLastMonthComments] = useState(0);
+
   const { currentUser } = useSelector((state) => state.user);
+
+  //
   useEffect(() => {
+    //
     const fetchUsers = async () => {
       try {
         const res = await fetch('/api/user/getusers?limit=5');
@@ -30,10 +30,12 @@ export default function DashboardComp() {
           setTotalUsers(data.totalUsers);
           setLastMonthUsers(data.lastMonthUsers);
         }
+
       } catch (error) {
         console.log(error.message);
       }
     };
+    //
     const fetchPosts = async () => {
       try {
         const res = await fetch('/api/post/getposts?limit=5');
@@ -43,10 +45,12 @@ export default function DashboardComp() {
           setTotalPosts(data.totalPosts);
           setLastMonthPosts(data.lastMonthPosts);
         }
+
       } catch (error) {
         console.log(error.message);
       }
     };
+    //
     const fetchComments = async () => {
       try {
         const res = await fetch('/api/comment/getcomments?limit=5');
@@ -56,6 +60,7 @@ export default function DashboardComp() {
           setTotalComments(data.totalComments);
           setLastMonthComments(data.lastMonthComments);
         }
+        
       } catch (error) {
         console.log(error.message);
       }
@@ -66,13 +71,17 @@ export default function DashboardComp() {
       fetchComments();
     }
   }, [currentUser]);
+
+  
   return (
     <div className='p-3 md:mx-auto'>
       <div className='flex-wrap flex gap-4 justify-center'>
         <div className='flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md'>
           <div className='flex justify-between'>
             <div className=''>
-              <h3 className='text-gray-500 text-md uppercase'>Total Users</h3>
+              <h3 className='text-gray-500 text-md uppercase'>
+                Total Users
+              </h3>
               <p className='text-2xl'>{totalUsers}</p>
             </div>
             <HiOutlineUserGroup className='bg-teal-600  text-white rounded-full text-5xl p-3 shadow-lg' />
@@ -82,7 +91,9 @@ export default function DashboardComp() {
               <HiArrowNarrowUp />
               {lastMonthUsers}
             </span>
-            <div className='text-gray-500'>Last month</div>
+            <div className='text-gray-500'>
+              Last month
+            </div>
           </div>
         </div>
         <div className='flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md'>

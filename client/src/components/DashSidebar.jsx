@@ -17,6 +17,7 @@ export default function DashSidebar() {
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromUrl = urlParams.get('tab');
+
     if (tabFromUrl) {
       setTab(tabFromUrl);
     }
@@ -28,11 +29,13 @@ export default function DashSidebar() {
         method: 'POST',
       });
       const data = await res.json();
+
       if (!res.ok) {
         console.log(data.message);
       } else {
         dispatch(signoutSuccess());
       }
+
     } catch (error) {
       console.log(error.message);
     }
@@ -43,6 +46,7 @@ export default function DashSidebar() {
     <Sidebar className='w-full md:w-56'>
       <Sidebar.Items>
         <Sidebar.ItemGroup className='flex flex-col gap-1'>
+
           {currentUser && currentUser.isAdmin && (
             <Link to='/dashboard?tab=dash'>
               <Sidebar.Item
