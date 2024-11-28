@@ -21,6 +21,7 @@ mongoose
     console.log(err);
   });
 
+//
 const __dirname = path.resolve();
 
 // Cretae app into an express application
@@ -42,7 +43,6 @@ app.use('/api/comment', commentRoutes);
 
 // For our build
 app.use(express.static(path.join(__dirname, '/client/dist')));
-
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
 });
