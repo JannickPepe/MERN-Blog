@@ -23,14 +23,17 @@ export default function Home() {
   return (
     <main>
 
+      {/* HERO SECTION */}
       <section className='bg-slate-100 dark:bg-slate-700'>
         <NewHero />
       </section>
     
+     {/* PROJECTS SECTION */}
       <section className='bg-slate-100 dark:bg-slate-700'>
         <NewProjects/>
       </section>
 
+      {/* POST / BLOG SECTION */}
       <section className='max-w-8xl mx-auto p-3 flex flex-col gap-8 py-7'>
         {posts && posts.length > 0 && (
           <div className='flex flex-col gap-6'>

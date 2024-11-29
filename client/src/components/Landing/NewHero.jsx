@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useRef } from "react";
-import { Link } from 'react-router-dom';
 import { useScroll, useTransform, motion } from "framer-motion";
+import LandingCTA from "./LandingCTA";
 
 const NewHero = () => {
     const targetRef = useRef(null);
@@ -43,11 +43,8 @@ const Copy = ({ scrollYProgress }) => {
                 A community for every person in tech and programming - no matter the skillset. <br/>
                 Newsletters and blogs will be available for all!
             </p>
-            <div className="flex items-center gap-4">
-                <Link to='/search' className='text-xs sm:text-sm text-teal-500 dark:text-violet-500 font-bold hover:underline' >
-                    View all posts
-                </Link>
-            </div>
+    
+            <LandingCTA />
         </motion.div>
     );
 };
