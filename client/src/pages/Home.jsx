@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import PostCard from '../components/PostCard';
 import NewHero from '../components/Landing/NewHero';
 import { NewProjects } from '../components/Landing/NewProjects';
-import NewBlogs from '../components/Landing/NewBlogs';
+import Articles from '../components/Landing/Articles';
 
 export default function Home() {
 
@@ -52,8 +52,10 @@ export default function Home() {
         )}
       </section>
 
+      {/* ARTICLES SECTION */}
       <section className='bg-slate-100 dark:bg-slate-700'>
-        <NewBlogs />
+      <Articles posts={posts} />
+
       </section>
     
     </main>

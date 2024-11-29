@@ -120,7 +120,7 @@ const MernContent = () => (
         </h2>
 
         <div className="col-span-1 md:col-span-8">
-            <div className="flex gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                 <span className="text-xs text-slate-800 font-semibold border-2 border-sky-700 px-2 py-1 rounded-full">Scaleable</span>
                 <span className="text-xs text-slate-800 font-semibold border-2 border-sky-700 px-2 py-1 rounded-full">Middlewares</span>
                 <span className="text-xs text-slate-800 font-semibold border-2 border-sky-700 px-2 py-1 rounded-full">State Mangement</span>
@@ -150,7 +150,7 @@ const FernContent = () => (
         </h2>
 
         <div className="col-span-1 md:col-span-8">
-            <div className="flex gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                 <span className="text-xs text-slate-800 font-semibold border-2 border-sky-700 px-2 py-1 rounded-full">Virtual DOM</span>
                 <span className="text-xs text-slate-800 font-semibold border-2 border-sky-700 px-2 py-1 rounded-full">Middlewares</span>
                 <span className="text-xs text-slate-800 font-semibold border-2 border-sky-700 px-2 py-1 rounded-full">State Mangement</span>
@@ -180,7 +180,7 @@ const NextjsContent = () => (
         </h2>
 
         <div className="col-span-1 md:col-span-8">
-            <div className="flex gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                 <span className="text-xs text-slate-800 font-semibold border-2 border-sky-700 px-2 py-1 rounded-full">Scaleable</span>
                 <span className="text-xs text-slate-800 font-semibold border-2 border-sky-700 px-2 py-1 rounded-full">Type Safe</span>
                 <span className="text-xs text-slate-800 font-semibold border-2 border-sky-700 px-2 py-1 rounded-full">State Mangement</span>

@@ -14,7 +14,7 @@ const BREAKPOINTS = {
     lg: 1024,
 };
 
-const NewBlogs = () => {
+const Articles = () => {
     const [ref, { width }] = useMeasure();
     const [offset, setOffset] = useState(0);
 
@@ -112,7 +112,7 @@ const Card = ({ url, category, title, description }) => {
     );
 };
 
-export default NewBlogs;
+export default Articles;
 
 const items = [
     {
