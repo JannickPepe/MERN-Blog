@@ -12,7 +12,7 @@ import nighteCodingLogo from '../assets/logo/nighteCoding-logo.png';
 
 export const SignInTemp = () => {
     return (
-        <div className="dark:bg-zinc-950 py-10 text-zinc-200 selection:bg-zinc-600">
+        <div className="dark:bg-zinc-950 py-4 md:py-10 text-zinc-200 selection:bg-zinc-600">
             <motion.div
                 initial={{
                     opacity: 0,

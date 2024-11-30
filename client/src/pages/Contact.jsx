@@ -1,10 +1,11 @@
+import TerminalContact from "../components/contact/ContactForm"
 
 
 const Contact = () => {
     return (
-        <div>
-            Contact Page
-        </div>
+        <section>
+            <TerminalContact />
+        </section>
     )
 }
 

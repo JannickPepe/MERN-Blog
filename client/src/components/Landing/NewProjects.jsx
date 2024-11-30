@@ -37,7 +37,7 @@ export const NewProjects = () => {
     );
 };
 
-const IMG_PADDING = 12;
+const IMG_PADDING = 20;
 
 const TextParallaxContent = ({ imgUrl, subheading, heading, children }) => {
     return (
@@ -47,7 +47,7 @@ const TextParallaxContent = ({ imgUrl, subheading, heading, children }) => {
                 paddingRight: IMG_PADDING,
             }}
         >
-            <div className="relative h-[150vh]">
+            <div className="relative h-[85vh] md:h-[100vh]">
                 <StickyImage imgUrl={imgUrl} />
                 <OverlayCopy heading={heading} subheading={subheading} />
             </div>
@@ -70,8 +70,8 @@ const StickyImage = ({ imgUrl }) => {
         <motion.div
             style={{
                 backgroundImage: `url(${imgUrl})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
+                backgroundSize: "",
+                backgroundPosition: "",
                 height: `calc(100vh - ${IMG_PADDING * 2}px)`,
                 top: IMG_PADDING,
                 scale,
@@ -96,7 +96,7 @@ const OverlayCopy = ({ subheading, heading }) => {
         offset: ["start end", "end start"],
     });
 
-    const y = useTransform(scrollYProgress, [0, 1], [250, -250]);
+    const y = useTransform(scrollYProgress, [0, 1], [280, -250]);
     const opacity = useTransform(scrollYProgress, [0.25, 0.5, 0.75], [0, 1, 0]);
 
     return (

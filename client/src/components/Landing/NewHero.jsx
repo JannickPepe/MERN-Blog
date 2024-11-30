@@ -10,7 +10,7 @@ const NewHero = () => {
     });
 
     return (
-        <section ref={targetRef} className="h-[350vh]">
+        <section ref={targetRef} className="h-[250vh]">
             <div className="h-[92vh] sticky top-0 z-0 grid grid-cols-3 grid-rows-3 gap-4 p-4 overflow-hidden">
                 <Copy scrollYProgress={scrollYProgress} />
                 <Images scrollYProgress={scrollYProgress} />

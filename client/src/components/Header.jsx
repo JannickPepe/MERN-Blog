@@ -129,10 +129,6 @@ export default function Header() {
         />
       </form>
 
-      <Button className='w-12 h-10 lg:hidden' color='gray' pill>
-        <AiOutlineSearch />
-      </Button>
-
     </Navbar>
   );
 
