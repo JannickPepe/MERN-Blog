@@ -54,8 +54,7 @@ export default function Home() {
 
       {/* ARTICLES SECTION */}
       <section className='bg-slate-100 dark:bg-slate-700'>
-      <Articles posts={posts} />
-
+        <Articles />
       </section>
     
     </main>

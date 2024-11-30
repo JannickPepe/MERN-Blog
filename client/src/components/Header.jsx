@@ -6,6 +6,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toggleTheme } from '../redux/theme/themeSlice';
 import { signoutSuccess } from '../redux/user/userSlice';
 import { useEffect, useState } from 'react';
+import nighteCodingLogo from '../assets/logo/nighteCoding-logo.png';
+import NewLogin from './NewLogin';
+
 
 export default function Header() {
 
@@ -16,7 +19,7 @@ export default function Header() {
   const dispatch = useDispatch();
 
   const { currentUser } = useSelector((state) => state.user);
-  // for the L n D mode
+  // for the LnD mode
   const { theme } = useSelector((state) => state.theme);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -59,21 +62,27 @@ export default function Header() {
 
   return (
     <Navbar className='border-b-2'>
-      <Link to='/' className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white' >
-        <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
-          NighteCoding
-        </span>
+      <Link to='/' className='flex items-center font-semibold dark:text-white group gap-1' >
+        <img 
+          src={nighteCodingLogo} 
+          alt={'NighteCoding Logo'} 
+          className='h-12 w-12 group-hover:border-2 group-hover:border-sky-800 group-hover:rounded-full group-hover:scale-105' 
+        />
+        <span className='text-base font-bold'>NighteCoding</span>
       </Link>
 
       <Navbar.Collapse>
-        <Navbar.Link active={path === '/'} as={'div'}>
-          <Link to='/'>Home</Link>
+        <Navbar.Link active={path === '/search'} as={'div'}>
+          <Link to='/search'>Posts</Link>
+        </Navbar.Link>
+        <Navbar.Link active={path === '/projects'} as={'div'}>
+          <Link to='/projects'>Projects</Link>
         </Navbar.Link>
         <Navbar.Link active={path === '/about'} as={'div'}>
           <Link to='/about'>About</Link>
         </Navbar.Link>
-        <Navbar.Link active={path === '/projects'} as={'div'}>
-          <Link to='/projects'>Projects</Link>
+        <Navbar.Link active={path === '/contact'} as={'div'}>
+          <Link to='/contact'>Contact</Link>
         </Navbar.Link>
       </Navbar.Collapse>
 
@@ -103,9 +112,7 @@ export default function Header() {
           </Dropdown>
         ) : (
           <Link to='/sign-in'>
-            <Button gradientDuoTone='purpleToBlue' outline>
-              Sign In
-            </Button>
+            <NewLogin />
           </Link>
         )}
         <Navbar.Toggle />

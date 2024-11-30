@@ -46,7 +46,7 @@ const Articles = () => {
                 {/* CARDS */}
                 <div className="mx-auto max-w-6xl">
                     <p className="mb-4 text-3xl font-semibold">
-                        Got Blogs? <span className="text-slate-500">Yes, even that.</span>
+                        Got Articles? <span className="text-slate-500">Yes, even that.</span>
                     </p>
                     <motion.div
                         animate={{
