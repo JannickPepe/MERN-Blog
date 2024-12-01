@@ -4,10 +4,10 @@ import { twMerge } from "tailwind-merge";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { signInFailure, signInStart, signInSuccess } from "../redux/user/userSlice";
+import { signInFailure, signInStart, signInSuccess } from "../../redux/user/userSlice";
 import { Alert, Spinner } from "flowbite-react";
 import OAuth from "./OAuth";
-import nighteCodingLogo from '../assets/logo/nighteCoding-logo.png';
+import nighteCodingLogo from '../../assets/logo/nighteCoding-logo.png';
 
 
 export const SignInTemp = () => {

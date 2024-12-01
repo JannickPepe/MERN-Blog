@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
-import PostCard from '../PostCard';
+import PostCard from '../Posts/PostCard';
 
 const PostsSection = () => {
 

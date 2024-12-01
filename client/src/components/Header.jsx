@@ -7,7 +7,7 @@ import { toggleTheme } from '../redux/theme/themeSlice';
 import { signoutSuccess } from '../redux/user/userSlice';
 import { useEffect, useState } from 'react';
 import nighteCodingLogo from '../assets/logo/nighteCoding-logo.png';
-import NewLogin from './NewLogin';
+import NewLogin from './Login/NewLogin';
 
 
 export default function Header() {

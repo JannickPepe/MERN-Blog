@@ -1,5 +1,5 @@
 
-import { SignInTemp } from '../../components/SignInTemp';
+import { SignInTemp } from '../../components/Login/SignInTemp';
 
 
 export default function SignIn() {

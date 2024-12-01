@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import { set } from 'mongoose';
-import PostPageCreate from './PostPageCreate';
+//import { set } from 'mongoose';
+import PostPageCreate from '../Posts/PostPageCreate';
 
 
 export default function DashPosts() {
