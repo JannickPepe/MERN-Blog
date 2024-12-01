@@ -10,8 +10,17 @@ import NextjsContentSection from "./NextjsContentSection";
 
 
 export const NewProjects = () => {
+
     return (
-        <div className="bg-white">
+        <section className="pt-14 md:pt-28">
+            <div className="text-center pb-6 md:pb-10">
+                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold">
+                    Exciting <span className="text-sky-600 dark:text-indigo-500">Real Life</span> Projects 
+                </h2>
+                <p className="text-xl text-zinc-600 dark:text-slate-400 font-semibold mt-3">Our projects ranges from React, to Anglular and C# in fullstack environment.</p>
+                <p className="text-xl text-zinc-600 dark:text-slate-400 font-semibold">With Github and Live Server Link</p>
+            </div>
+
             <TextParallaxContent
                 imgUrl={ProjectSectionOne}
                 subheading="Building"
@@ -33,7 +42,7 @@ export const NewProjects = () => {
             >
                 <NextjsContentSection />
             </TextParallaxContent>
-        </div>
+        </section>
     );
 };
 

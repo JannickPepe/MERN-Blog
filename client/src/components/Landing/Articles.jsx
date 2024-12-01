@@ -2,40 +2,46 @@
 import { useRef } from "react";
 import { useMotionValue, motion, useSpring, useTransform } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
+import article1 from "../../assets/images/FERN-Projects.webp";
+import article2 from "../../assets/images/MERN-Projects.webp";
+import article3 from "../../assets/images/NextJS-Projects.png";
+import article4 from "../../assets/images/Projects-Community.webp";
 
 export const Articles = () => {
     return (
-        <section className="bg-white dark:bg-slate-800 p-4 md:p-8">
+        <section className="py-16">
+            <div className="text-center pb-10">
+                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold">
+                    NighteCoding&apos;s exciting <span className="text-sky-600 dark:text-indigo-500">Articles</span>
+                </h2>
+                <p className="text-xl text-zinc-600 dark:text-slate-400 font-semibold mt-3">Our articles are a perfect match for an evening coffee</p>
+                <p className="text-xl text-zinc-600 dark:text-slate-400 font-semibold">With redirect link to the article</p>
+            </div>
+
             <div className="mx-auto max-w-5xl">
                 <Link
                     heading="ReactJS"
-                    subheading="Learn what we do here"
-                    imgSrc="/imgs/random/11.jpg"
-                    href="#"
+                    subheading="Read about FERM implementation"
+                    imgSrc={article1}
+                    href='#'
                 />
                 <Link
                     heading="NextJS"
-                    subheading="We work with great people"
-                    imgSrc="/imgs/random/6.jpg"
-                    href="#"
+                    subheading="NextJS with either Appwrite or Neon"
+                    imgSrc={article3}
+                    href='#'
                 />
                 <Link
                     heading="NodeJS"
-                    subheading="Our work speaks for itself"
-                    imgSrc="/imgs/random/4.jpg"
-                    href="#"
+                    subheading="Read about NodeJS in MERN"
+                    imgSrc={article2}
+                    href='#'
                 />
                 <Link
                     heading="Tech"
-                    subheading="We want cool people"
-                    imgSrc="/imgs/random/5.jpg"
-                    href="#"
-                />
-                <Link
-                    heading="IT"
-                    subheading="Incase you're bored"
-                    imgSrc="/imgs/random/10.jpg"
-                    href="#"
+                    subheading="The newest trends in 2025"
+                    imgSrc={article4}
+                    href='#'
                 />
             </div>
         </section>
@@ -77,7 +83,7 @@ const Link = ({ heading, imgSrc, subheading, href }) => {
             onMouseMove={handleMouseMove}
             initial="initial"
             whileHover="whileHover"
-            className="group relative flex items-center justify-between border-b-2 border-neutral-700 py-4 transition-colors duration-500 hover:border-neutral-50 md:py-8"
+            className="group relative flex items-center justify-between border-b-2 border-neutral-700 dark:border-neutral-500 py-4 transition-colors duration-500 hover:border-neutral-50 md:py-8"
         >
             <div>
                 <motion.span
@@ -90,7 +96,7 @@ const Link = ({ heading, imgSrc, subheading, href }) => {
                         staggerChildren: 0.075,
                         delayChildren: 0.25,
                     }}
-                    className="relative z-10 block text-4xl font-bold text-neutral-500 transition-colors duration-500 group-hover:text-neutral-800 dark:group-hover:text-neutral-50 md:text-6xl"
+                    className="relative z-10 block text-4xl font-bold text-neutral-500 dark:text-indigo-500 transition-colors duration-500 group-hover:text-neutral-800 dark:group-hover:text-neutral-50 md:text-6xl"
                 >
                     {heading.split("").map((l, i) => (
                         <motion.span
@@ -106,7 +112,7 @@ const Link = ({ heading, imgSrc, subheading, href }) => {
                         </motion.span>
                     ))}
                 </motion.span>
-                <span className="relative z-10 mt-2 block text-base text-neutral-500 transition-colors duration-500 group-hover:text-neutral-800 dark:group-hover:text-neutral-50">
+                <span className="relative z-10 mt-2 block text-base text-neutral-500 dark:text-slate-400 transition-colors duration-500 group-hover:text-neutral-800 dark:group-hover:text-neutral-50">
                     {subheading}
                 </span>
             </div>
@@ -124,7 +130,7 @@ const Link = ({ heading, imgSrc, subheading, href }) => {
                 }}
                 transition={{ type: "spring" }}
                 src={imgSrc}
-                className="absolute z-0 h-24 w-32 rounded-lg object-cover md:h-48 md:w-64"
+                className="absolute z-0 h-20 w-28 rounded-lg object-cover md:h-48 md:w-64"
                 alt={`Image representing a link for ${heading}`}
             />
 
