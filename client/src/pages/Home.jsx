@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import PostCard from '../components/PostCard';
 import NewHero from '../components/Landing/NewHero';
 import { NewProjects } from '../components/Landing/NewProjects';
-import Articles from '../components/Landing/Articles';
+import { Articles } from '../components/Landing/Articles';
 
 export default function Home() {
 

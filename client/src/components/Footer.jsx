@@ -46,7 +46,7 @@ export default function FooterCom() {
             </div>
             <div className="px-4 my-4 w-full sm:w-auto xl:w-1/5">
               <div>
-                <h2 className="inline-block text-2xl pb-4 mb-4 border-b-4 border-blue-600">Connect With Us</h2>
+                <h2 className="inline-block text-2xl pb-4 mb-4 border-b-4 border-blue-600">Getting in Contact</h2>
               </div>
               <div className='flex gap-2 justify-start'>
                 <a href="#" className="inline-flex items-center justify-center h-8 w-8 border border-gray-100 rounded-full mr-1 hover:text-blue-400 hover:border-blue-400">

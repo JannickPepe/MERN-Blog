@@ -1,4 +1,4 @@
-import TerminalContact from "../components/contact/ContactForm"
+import TerminalContact from "../../components/contact/ContactForm"
 
 
 const Contact = () => {

@@ -1,166 +1,149 @@
 /* eslint-disable react/prop-types */
-import { motion } from "framer-motion";
-import { useState } from "react";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import useMeasure from "react-use-measure";
+import { useRef } from "react";
+import { useMotionValue, motion, useSpring, useTransform } from "framer-motion";
+import { FiArrowRight } from "react-icons/fi";
 
-const CARD_WIDTH = 350;
-const CARD_HEIGHT = 350;
-const MARGIN = 20;
-const CARD_SIZE = CARD_WIDTH + MARGIN;
-
-const BREAKPOINTS = {
-    sm: 640,
-    lg: 1024,
-};
-
-const Articles = () => {
-    const [ref, { width }] = useMeasure();
-    const [offset, setOffset] = useState(0);
-
-    const CARD_BUFFER =
-        width > BREAKPOINTS.lg ? 3 : width > BREAKPOINTS.sm ? 2 : 1;
-
-    const CAN_SHIFT_LEFT = offset < 0;
-
-    const CAN_SHIFT_RIGHT =
-        Math.abs(offset) < CARD_SIZE * (items.length - CARD_BUFFER);
-
-    const shiftLeft = () => {
-        if (!CAN_SHIFT_LEFT) {
-        return;
-        }
-        setOffset((pv) => (pv += CARD_SIZE));
-    };
-
-    const shiftRight = () => {
-        if (!CAN_SHIFT_RIGHT) {
-        return;
-        }
-        setOffset((pv) => (pv -= CARD_SIZE));
-    };
-
+export const Articles = () => {
     return (
-        <section className="bg-slate-100" ref={ref}>
-            <div className="relative overflow-hidden p-4">
-                {/* CARDS */}
-                <div className="mx-auto max-w-6xl">
-                    <p className="mb-4 text-3xl font-semibold">
-                        Got Articles? <span className="text-slate-500">Yes, even that.</span>
-                    </p>
-                    <motion.div
-                        animate={{
-                        x: offset,
-                        }}
-                        className="flex"
-                    >
-                        {items.map((item) => {
-                        return <Card key={item.id} {...item} />;
-                        })}
-                    </motion.div>
-                </div>
-
-                {/* BUTTONS */}
-                <>
-                    <motion.button
-                        initial={false}
-                        animate={{
-                        x: CAN_SHIFT_LEFT ? "0%" : "-100%",
-                        }}
-                        className="absolute left-0 top-[60%] z-30 rounded-r-xl bg-slate-100/30 p-3 pl-2 text-4xl text-white backdrop-blur-sm transition-[padding] hover:pl-3"
-                        onClick={shiftLeft}
-                    >
-                        <FiChevronLeft />
-                    </motion.button>
-                    <motion.button
-                        initial={false}
-                        animate={{
-                        x: CAN_SHIFT_RIGHT ? "0%" : "100%",
-                        }}
-                        className="absolute right-0 top-[60%] z-30 rounded-l-xl bg-slate-100/30 p-3 pr-2 text-4xl text-white backdrop-blur-sm transition-[padding] hover:pr-3"
-                        onClick={shiftRight}
-                    >
-                        <FiChevronRight />
-                    </motion.button>
-                </>
+        <section className="bg-white dark:bg-slate-800 p-4 md:p-8">
+            <div className="mx-auto max-w-5xl">
+                <Link
+                    heading="ReactJS"
+                    subheading="Learn what we do here"
+                    imgSrc="/imgs/random/11.jpg"
+                    href="#"
+                />
+                <Link
+                    heading="NextJS"
+                    subheading="We work with great people"
+                    imgSrc="/imgs/random/6.jpg"
+                    href="#"
+                />
+                <Link
+                    heading="NodeJS"
+                    subheading="Our work speaks for itself"
+                    imgSrc="/imgs/random/4.jpg"
+                    href="#"
+                />
+                <Link
+                    heading="Tech"
+                    subheading="We want cool people"
+                    imgSrc="/imgs/random/5.jpg"
+                    href="#"
+                />
+                <Link
+                    heading="IT"
+                    subheading="Incase you're bored"
+                    imgSrc="/imgs/random/10.jpg"
+                    href="#"
+                />
             </div>
         </section>
     );
 };
 
-const Card = ({ url, category, title, description }) => {
+const Link = ({ heading, imgSrc, subheading, href }) => {
+    const ref = useRef(null);
+
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+
+    const mouseXSpring = useSpring(x);
+    const mouseYSpring = useSpring(y);
+
+    const top = useTransform(mouseYSpring, [0.5, -0.5], ["40%", "60%"]);
+    const left = useTransform(mouseXSpring, [0.5, -0.5], ["60%", "70%"]);
+
+    const handleMouseMove = (e) => {
+        const rect = ref.current.getBoundingClientRect();
+
+        const width = rect.width;
+        const height = rect.height;
+
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        const xPct = mouseX / width - 0.5;
+        const yPct = mouseY / height - 0.5;
+
+        x.set(xPct);
+        y.set(yPct);
+    };
+
     return (
-        <div
-            className="relative shrink-0 cursor-pointer rounded-2xl bg-white shadow-md transition-all hover:scale-[1.015] hover:shadow-xl"
-            style={{
-                width: CARD_WIDTH,
-                height: CARD_HEIGHT,
-                marginRight: MARGIN,
-                backgroundImage: `url(${url})`,
-                backgroundPosition: "center",
-                backgroundSize: "cover",
-            }}
-            >
-            <div className="absolute inset-0 z-20 rounded-2xl bg-gradient-to-b from-black/90 via-black/60 to-black/0 p-6 text-white transition-[backdrop-filter] hover:backdrop-blur-sm">
-                <span className="text-xs font-semibold uppercase text-violet-300">
-                {category}
+        <motion.a
+            href={href}
+            ref={ref}
+            onMouseMove={handleMouseMove}
+            initial="initial"
+            whileHover="whileHover"
+            className="group relative flex items-center justify-between border-b-2 border-neutral-700 py-4 transition-colors duration-500 hover:border-neutral-50 md:py-8"
+        >
+            <div>
+                <motion.span
+                    variants={{
+                        initial: { x: 0 },
+                        whileHover: { x: -16 },
+                    }}
+                    transition={{
+                        type: "spring",
+                        staggerChildren: 0.075,
+                        delayChildren: 0.25,
+                    }}
+                    className="relative z-10 block text-4xl font-bold text-neutral-500 transition-colors duration-500 group-hover:text-neutral-800 dark:group-hover:text-neutral-50 md:text-6xl"
+                >
+                    {heading.split("").map((l, i) => (
+                        <motion.span
+                            variants={{
+                                initial: { x: 0 },
+                                whileHover: { x: 16 },
+                            }}
+                            transition={{ type: "spring" }}
+                            className="inline-block"
+                            key={i}
+                        >
+                            {l}
+                        </motion.span>
+                    ))}
+                </motion.span>
+                <span className="relative z-10 mt-2 block text-base text-neutral-500 transition-colors duration-500 group-hover:text-neutral-800 dark:group-hover:text-neutral-50">
+                    {subheading}
                 </span>
-                <p className="my-2 text-3xl font-bold">{title}</p>
-                <p className="text-lg text-slate-300">{description}</p>
             </div>
-        </div>
+
+            <motion.img
+                style={{
+                    top,
+                    left,
+                    translateX: "-50%",
+                    translateY: "-50%",
+                }}
+                variants={{
+                    initial: { scale: 0, rotate: "-12.5deg" },
+                    whileHover: { scale: 1, rotate: "12.5deg" },
+                }}
+                transition={{ type: "spring" }}
+                src={imgSrc}
+                className="absolute z-0 h-24 w-32 rounded-lg object-cover md:h-48 md:w-64"
+                alt={`Image representing a link for ${heading}`}
+            />
+
+            <motion.div
+                variants={{
+                    initial: {
+                        x: "25%",
+                        opacity: 0,
+                    },
+                    whileHover: {
+                        x: "0%",
+                        opacity: 1,
+                    },
+                }}
+                transition={{ type: "spring" }}
+                className="relative z-10 p-4"
+            >
+                <FiArrowRight className="text-5xl text-neutral-50" />
+            </motion.div>
+        </motion.a>
     );
 };
-
-export default Articles;
-
-const items = [
-    {
-        id: 1,
-        url: "/imgs/computer/mouse.png",
-        category: "Mice",
-        title: "Just feels right",
-        description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi, dolor.",
-    },
-    {
-        id: 2,
-        url: "/imgs/computer/keyboard.png",
-        category: "Keyboards",
-        title: "Type in style",
-        description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi, dolor.",
-    },
-    {
-        id: 3,
-        url: "/imgs/computer/monitor.png",
-        category: "Monitors",
-        title: "Looks like a win",
-        description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi, dolor.",
-    },
-    {
-        id: 4,
-        url: "/imgs/computer/chair.png",
-        category: "Chairs",
-        title: "Back feels great",
-        description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi, dolor.",
-    },
-    {
-        id: 5,
-        url: "/imgs/computer/lights.png",
-        category: "Lights",
-        title: "It's lit",
-        description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi, dolor.",
-    },
-    {
-        id: 6,
-        url: "/imgs/computer/desk.png",
-        category: "Desks",
-        title: "Stand up straight",
-        description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi, dolor.",
-    },
-];

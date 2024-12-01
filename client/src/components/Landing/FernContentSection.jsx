@@ -11,7 +11,7 @@ const FernContentSection = () => {
     const badges = ["Virtual DOM", "Middlewares", "State Management", "Event-driven"];
 
     return (
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 px-4 pb-24 pt-12 md:grid-cols-12">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 px-4 pb-24 md:pt-12 md:grid-cols-12">
             <div className="col-span-1 md:col-span-4">
                 <h3 className="text-3xl font-bold mb-4">FERN (Firebase, ExpressJS, ReactJS and NodeJS) <br /> Projects</h3>
                 <Link to={'/projects'} className="group">

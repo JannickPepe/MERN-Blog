@@ -1,4 +1,4 @@
-import AbuootSections from "../components/About/AboutSections";
+import AbuootSections from "../../components/About/AboutSections";
 
 export default function About() {
   return (

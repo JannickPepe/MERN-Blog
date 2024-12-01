@@ -1,20 +1,20 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import About from './pages/About';
-import SignIn from './pages/SignIn';
+import About from './pages/About/About';
+import SignIn from './pages/login/SignIn';
 import Dashboard from './pages/Dashboard';
-import Projects from './pages/Projects';
-import SignUp from './pages/SignUp';
+import Projects from './pages/Projects/Projects';
+import SignUp from './pages/login/SignUp';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import PrivateRoute from './components/PrivateRoute';
 import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute';
-import CreatePost from './pages/CreatePost';
-import UpdatePost from './pages/UpdatePost';
-import PostPage from './pages/PostPage';
+import CreatePost from './pages/Posts/CreatePost';
+import UpdatePost from './pages/Posts/UpdatePost';
+import PostPage from './pages/Posts/PostPage';
 import ScrollToTop from './components/ScrollToTop';
-import Search from './pages/Search';
-import Contact from './pages/Contact';
+import Search from './pages/Posts/Search';
+import Contact from './pages/Contact/Contact';
 
 export default function App() {
   return (
