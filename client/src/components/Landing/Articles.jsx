@@ -9,7 +9,7 @@ import article4 from "../../assets/images/Projects-Community.webp";
 
 export const Articles = () => {
     return (
-        <section className="py-16">
+        <section className="py-16 max-w-5xl mx-auto">
             <div className="text-center pb-10">
                 <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold">
                     NighteCoding&apos;s exciting <span className="text-sky-600 dark:text-indigo-500">Articles</span>
@@ -18,7 +18,7 @@ export const Articles = () => {
                 <p className="text-xl text-zinc-600 dark:text-slate-400 font-semibold">With redirect link to the article</p>
             </div>
 
-            <div className="mx-auto max-w-5xl">
+            <div className="mx-auto px-6 md:px-0">
                 <Link
                     heading="ReactJS"
                     subheading="Read about FERM implementation"
