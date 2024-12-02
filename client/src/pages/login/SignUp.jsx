@@ -1,4 +1,4 @@
-import { SignOutTemp } from "../../components/Login/SignOutTemp";
+import { RegisterTemp } from "../../components/Login/RegisterTemp";
 
 export default function SignUp() {
 
@@ -6,7 +6,7 @@ export default function SignUp() {
 
   return (
     <div className=''>
-      <SignOutTemp />
+      <RegisterTemp />
     </div>
   );
 }

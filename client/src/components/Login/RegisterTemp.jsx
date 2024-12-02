@@ -8,7 +8,7 @@ import OAuth from "./OAuth";
 import nighteCodingLogo from '../../assets/logo/nighteCoding-logo.png';
 
 
-export const SignOutTemp = () => {
+export const RegisterTemp = () => {
     return (
         <div className="dark:bg-zinc-950 py-4 md:py-10 text-zinc-200 selection:bg-zinc-600">
             <motion.div
