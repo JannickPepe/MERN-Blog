@@ -8,20 +8,18 @@ const TerminalContact = () => {
     const inputRef = useRef(null);
 
     return (
-        <section
-        
-        className="px-4 py-10 md:py-20 bg-zinc-200 dark:bg-slate-800"
+        <section className="px-4 py-10 md:py-20 bg-zinc-200 dark:bg-slate-800"
         >
-        <div
-            ref={containerRef}
-            onClick={() => {
-            inputRef.current?.focus();
-            }}
-            className="h-96 bg-slate-950/70 backdrop-blur rounded-lg w-full max-w-3xl mx-auto overflow-y-scroll shadow-xl cursor-text font-mono"
-        >
-            <TerminalHeader />
-            <TerminalBody inputRef={inputRef} containerRef={containerRef} />
-        </div>
+            <div
+                ref={containerRef}
+                onClick={() => {
+                    inputRef.current?.focus();
+                }}
+                className="h-96 bg-slate-950/70 backdrop-blur rounded-lg w-full max-w-3xl mx-auto overflow-y-scroll shadow-xl cursor-text font-mono"
+            >
+                <TerminalHeader />
+                <TerminalBody inputRef={inputRef} containerRef={containerRef} />
+            </div>
         </section>
     );
     };
@@ -103,20 +101,20 @@ const PreviousQuestions = ({ questions }) => {
         <>
             {questions.map((q, i) => {
                 if (q.complete) {
-                return (
-                    <Fragment key={i}>
-                        <p>
-                            {q.text || ""}
-                            {q.postfix && (
-                            <span className="text-violet-300">{q.postfix}</span>
-                            )}
-                        </p>
-                        <p className="text-emerald-300">
-                            <FiCheckCircle className="inline-block mr-2" />
-                            <span>{q.value}</span>
-                        </p>
-                    </Fragment>
-                );
+                    return (
+                        <Fragment key={i}>
+                            <p>
+                                {q.text || ""}
+                                {q.postfix && (
+                                    <span className="text-violet-300">{q.postfix}</span>
+                                )}
+                            </p>
+                            <p className="text-emerald-300">
+                                <FiCheckCircle className="inline-block mr-2" />
+                                <span>{q.value}</span>
+                            </p>
+                        </Fragment>
+                    );
                 }
                 return <Fragment key={i}></Fragment>;
             })}
@@ -146,9 +144,8 @@ const Summary = ({ questions, setQuestions }) => {
 
     const handleSend = () => {
         const formData = questions.reduce((acc, val) => {
-        return { ...acc, [val.key]: val.value };
+            return { ...acc, [val.key]: val.value };
         }, {});
-
         // Send this data to your server or whatever :)
         console.log(formData);
 
@@ -165,6 +162,7 @@ const Summary = ({ questions, setQuestions }) => {
                     </p>
                 );
             })}
+
             <p>Look good?</p>
             {complete ? (
                 <p className="text-emerald-300">
@@ -203,7 +201,7 @@ const CurLine = ({
 }) => {
     const scrollToBottom = () => {
         if (containerRef.current) {
-        containerRef.current.scrollTop = containerRef.current.scrollHeight;
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
         }
     };
 
@@ -212,7 +210,7 @@ const CurLine = ({
         handleSubmitLine(text);
         setText("");
         setTimeout(() => {
-        scrollToBottom();
+            scrollToBottom();
         }, 0);
     };
 
@@ -244,6 +242,7 @@ const CurLine = ({
                 <span className="text-cyan-300">~</span>{" "}
                 {command && <span className="opacity-50">Enter {command}: </span>}
                 {text}
+                
                 {focused && (
                     <motion.span
                         animate={{ opacity: [1, 1, 0, 0] }}
