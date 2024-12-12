@@ -52,105 +52,56 @@ const Copy = ({ scrollYProgress }) => {
 const Images = ({ scrollYProgress }) => {
     const scale = useTransform(scrollYProgress, [0, 1], [0.5, 1]);
 
-    const image1Offset = useTransform(scrollYProgress, [0, 1], ["-35%", "0%"]);
+    const offsets = [
+        { x: useTransform(scrollYProgress, [0, 1], ["-35%", "0%"]), y: useTransform(scrollYProgress, [0, 1], ["-35%", "0%"]) },
+        { x: useTransform(scrollYProgress, [0, 1], ["30%", "0%"]), y: useTransform(scrollYProgress, [0, 1], ["-30%", "0%"]) },
+        { x: useTransform(scrollYProgress, [0, 1], ["-25%", "0%"]), y: useTransform(scrollYProgress, [0, 1], ["25%", "0%"]) },
+        { x: useTransform(scrollYProgress, [0, 1], ["25%", "0%"]), y: useTransform(scrollYProgress, [0, 1], ["-145%", "0%"]) },
+        { x: useTransform(scrollYProgress, [0, 1], ["-25%", "0%"]), y: useTransform(scrollYProgress, [0, 1], ["25%", "0%"]) },
+        { x: useTransform(scrollYProgress, [0, 1], ["25%", "0%"]), y: useTransform(scrollYProgress, [0, 1], ["25%", "0%"]) },
+    ];
 
-    const image2OffsetX = useTransform(scrollYProgress, [0, 1], ["30%", "0%"]);
-    const image2OffsetY = useTransform(scrollYProgress, [0, 1], ["-30%", "0%"]);
+    const imageUrls = [
+        "https://ilearnengineering.com/wp-content/uploads/2023/05/Screenshot-2023-05-23-at-18.45.53-1024x455.png",
+        "https://www.21kschool.com/lk/wp-content/uploads/sites/24/2023/07/Coding.png",
+        "https://www.edology.com/uploads/media/sulu-700x450/00/1720-blog-why-coding-is-so-important-for-IT-jobs-s.jpg?v=2-0",
+        "https://xclcamps.com/wp-content/uploads/coding-difference-1.jpg",
+        "https://blog-media.byjusfutureschool.com/bfs-blog/2022/08/03035002/Article-Image-945%C3%97498.jpg",
+        "https://www.phoenix.edu/content/dam/edu/blog/2023/08/blog-hero-what-is-coding.png",
+    ];
 
-    const image3OffsetX = useTransform(scrollYProgress, [0, 1], ["-25%", "0%"]);
-    const image3OffsetY = useTransform(scrollYProgress, [0, 1], ["25%", "0%"]);
-
-    const image4OffsetX = useTransform(scrollYProgress, [0, 1], ["25%", "0%"]);
-    const image4OffsetY = useTransform(scrollYProgress, [0, 1], ["-145%", "0%"]);
-
-    const image5OffsetX = useTransform(scrollYProgress, [0, 1], ["-25%", "0%"]);
-    const image5OffsetY = useTransform(scrollYProgress, [0, 1], ["25%", "0%"]);
-
-    const image6OffsetX = useTransform(scrollYProgress, [0, 1], ["25%", "0%"]);
-    const image6OffsetY = useTransform(scrollYProgress, [0, 1], ["25%", "0%"]);
+    const spans = [
+        "col-span-2",
+        "row-span-2",
+        "row-span-2",
+        "",
+        "",
+        "",
+    ];
 
     return (
         <>
-            <motion.div
-                className="col-span-2 relative z-10 rounded-lg"
-                style={{
-                backgroundImage:
-                    "url(https://ilearnengineering.com/wp-content/uploads/2023/05/Screenshot-2023-05-23-at-18.45.53-1024x455.png)",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                scale,
-                x: image1Offset,
-                y: image1Offset,
-                scrollBehavior: "smooth"
-                }}
-            />
-            <motion.div
-                className="row-span-2 relative z-10 rounded-lg"
-                style={{
-                backgroundImage:
-                    "url(https://www.21kschool.com/lk/wp-content/uploads/sites/24/2023/07/Coding.png)",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                scale,
-                x: image2OffsetX,
-                y: image2OffsetY,
-                scrollBehavior: "smooth"
-                }}
-            />
-
-            <motion.div
-                className="row-span-2 relative z-10 rounded-lg"
-                style={{
-                backgroundImage:
-                    "url(https://www.edology.com/uploads/media/sulu-700x450/00/1720-blog-why-coding-is-so-important-for-IT-jobs-s.jpg?v=2-0)",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                scale,
-                x: image3OffsetX,
-                y: image3OffsetY,
-                scrollBehavior: "smooth"
-                }}
-            />
-            <motion.div
-                className="relative z-10 rounded-lg"
-                style={{
-                backgroundImage:
-                    "url(https://xclcamps.com/wp-content/uploads/coding-difference-1.jpg)",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                scale,
-                x: image4OffsetX,
-                y: image4OffsetY,
-                scrollBehavior: "smooth"
-                }}
-            />
-
-            <motion.div
-                className="relative z-10 rounded-lg"
-                style={{
-                backgroundImage:
-                    "url(https://blog-media.byjusfutureschool.com/bfs-blog/2022/08/03035002/Article-Image-945%C3%97498.jpg)",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                scale,
-                x: image5OffsetX,
-                y: image5OffsetY,
-                scrollBehavior: "smooth"
-                }}
-            />
-            <motion.div
-                className="relative z-10 rounded-lg"
-                style={{
-                backgroundImage:
-                    "url(https://www.phoenix.edu/content/dam/edu/blog/2023/08/blog-hero-what-is-coding.png)",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                scale,
-                x: image6OffsetX,
-                y: image6OffsetY,
-                scrollBehavior: "smooth"
-                }}
-            />
+            {imageUrls.map((url, index) => (
+                <motion.div
+                    key={index}
+                    className={`relative z-10 rounded-lg ${spans[index]}`}
+                    style={{
+                        backgroundImage: `url(${url})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        scale,
+                        x: offsets[index].x,
+                        y: offsets[index].y,
+                    }}
+                    initial={{ opacity: 0 }} // Start invisible
+                    animate={{ opacity: 1 }} // Fade in
+                    transition={{
+                        delay: 0.4 + index * 0.2, // Dynamic delay for each image
+                        duration: 0.6, // Smooth fade duration
+                        ease: "easeOut", // Smooth easing
+                    }}
+                />
+            ))}
         </>
     );
 };

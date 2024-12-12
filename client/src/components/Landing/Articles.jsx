@@ -10,7 +10,7 @@ import article4 from "../../assets/images/Projects-Community.webp";
 export const Articles = () => {
     return (
         <section className="py-16 max-w-5xl mx-auto">
-            <div className="text-center pb-10">
+            <div className="text-center pb-10 px-4 md:px-2 lg:px-0">
                 <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold">
                     NighteCoding&apos;s exciting <span className="text-sky-600 dark:text-indigo-500">Articles</span>
                 </h2>
