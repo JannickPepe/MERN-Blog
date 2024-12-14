@@ -119,6 +119,17 @@ export default function CreateArticle() {
               setFormData({ ...formData, text: e.target.value })
             }
           />
+
+          <TextInput
+            type='text'
+            placeholder='Url Link'
+            required
+            id='link'
+            className='flex-1'
+            onChange={(e) =>
+              setFormData({ ...formData, link: e.target.value })
+            }
+          />
         </div>
 
         <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>

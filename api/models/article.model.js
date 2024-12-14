@@ -20,6 +20,11 @@ const articleSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    link: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     image: {
       type: String,
       default:

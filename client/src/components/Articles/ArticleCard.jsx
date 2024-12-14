@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 export default function ArticleCard({ article }) {
   return (
     <div className='group relative w-full border border-teal-800 hover:border-2 h-[360px] overflow-hidden rounded-lg transition-all'>
-      <Link to={`/article`}>
+      <Link to={article.link}>
         <img
           src={article.image}
           alt='post cover'
@@ -15,7 +15,7 @@ export default function ArticleCard({ article }) {
         <p className='text-lg font-semibold line-clamp-2'>{article.title}</p>
         <p className='text-base font-semibold line-clamp-2'>{article.text}</p>
         <Link
-          to={`/article`}
+          to={article.link}
           className='z-10 group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-all duration-300 text-center py-2 rounded-md !rounded-tl-none m-2'
         >
           Read article

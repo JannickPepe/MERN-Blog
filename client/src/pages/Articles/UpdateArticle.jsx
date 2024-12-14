@@ -132,6 +132,18 @@ export default function UpdateArticle() {
             }
             value={formData.text}
           />
+
+          <TextInput
+            type='text'
+            placeholder='Url Link'
+            required
+            id='link'
+            className='flex-1'
+            onChange={(e) =>
+              setFormData({ ...formData, link: e.target.value })
+            }
+            value={formData.link}
+          />
       
         </div>
         <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>

@@ -96,6 +96,7 @@ export default function DashArticles() {
               <Table.HeadCell>Article image</Table.HeadCell>
               <Table.HeadCell>Article title</Table.HeadCell>
               <Table.HeadCell>Article text</Table.HeadCell>
+              <Table.HeadCell>Article link url</Table.HeadCell>
               <Table.HeadCell>Delete</Table.HeadCell>
               <Table.HeadCell>
                 <span>Edit</span>
@@ -126,6 +127,8 @@ export default function DashArticles() {
                     </Link>
                   </Table.Cell>
                   <Table.Cell>{article.text}</Table.Cell>
+                  <Table.Cell>{article.link}</Table.Cell>
+
                   <Table.Cell>
                     <span
                       onClick={() => {

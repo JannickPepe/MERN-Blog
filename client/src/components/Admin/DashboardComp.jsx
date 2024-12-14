@@ -275,6 +275,7 @@ export default function DashboardComp() {
               <Table.HeadCell>Article image</Table.HeadCell>
               <Table.HeadCell>Article Title</Table.HeadCell>
               <Table.HeadCell>Article Text</Table.HeadCell>
+              <Table.HeadCell>Article link url</Table.HeadCell>
             </Table.Head>
             {articles &&
               articles.map((article) => (
@@ -289,6 +290,7 @@ export default function DashboardComp() {
                     </Table.Cell>
                     <Table.Cell className='w-1/2'>{article.title}</Table.Cell>
                     <Table.Cell className='w-1/2'>{article.text}</Table.Cell>
+                    <Table.Cell className='w-1/2'>{article.link}</Table.Cell>
                   </Table.Row>
                 </Table.Body>
               ))}

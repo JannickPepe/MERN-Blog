@@ -8,7 +8,7 @@ export const create = async (req, res, next) => {
     return next(errorHandler(403, 'You are not allowed to create an article'));
   }
 
-  if (!req.body.title || !req.body.text || !req.body.content) {
+  if (!req.body.title || !req.body.text || !req.body.link || !req.body.content) {
     return next(errorHandler(400, 'Please provide all required fields'));
   }
 
@@ -100,6 +100,7 @@ export const updatearticle = async (req, res, next) => {
           title: req.body.title,
           content: req.body.content,
           text: req.body.text,
+          link: req.body.link,
           image: req.body.image,
         },
       },

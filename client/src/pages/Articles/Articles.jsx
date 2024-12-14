@@ -39,14 +39,14 @@ const Articles = () => {
 
     return (
         <section className="max-w-8xl mx-auto p-3 flex flex-col gap-8 py-10">
-           <h2>Articles Page</h2>
+            <h2>Articles Page</h2>
 
             {articles && articles.length > 0 && (
                 <div className="">
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
                         {articles.map((article) => (
-                        <ArticleCard key={article._id} article={article} />
+                            <ArticleCard key={article._id} article={article} />
                         ))}
                     </div>
 
@@ -82,8 +82,6 @@ const Articles = () => {
                             Next
                         </button>
                     </div>
-
-                   
                 </div>
             )}
         </section>
