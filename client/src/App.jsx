@@ -12,9 +12,12 @@ import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute';
 import CreatePost from './pages/Posts/CreatePost';
 import UpdatePost from './pages/Posts/UpdatePost';
 import PostPage from './pages/Posts/PostPage';
+import CreateArticle from './pages/Articles/CreateArticle';
+import UpdateArticle from './pages/Articles/UpdateArticle';
 import ScrollToTop from './components/ScrollToTop';
 import Search from './pages/Posts/Search';
 import Contact from './pages/Contact/Contact';
+import Articles from './pages/Articles/Articles';
 
 export default function App() {
   return (
@@ -36,8 +39,11 @@ export default function App() {
         <Route element={<OnlyAdminPrivateRoute />}>
           <Route path='/create-post' element={<CreatePost />} />
           <Route path='/update-post/:postId' element={<UpdatePost />} />
+          <Route path='/create-article' element={<CreateArticle />} />
+          <Route path='/update-article/:articleId' element={<UpdateArticle />} />
         </Route>
 
+        <Route path='/articles' element={<Articles />} />
         <Route path='/projects' element={<Projects />} />
         <Route path='/post/:postSlug' element={<PostPage />} />
       </Routes>

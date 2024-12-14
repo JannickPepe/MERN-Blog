@@ -6,6 +6,7 @@ import DashPosts from '../components/Admin/DashPosts';
 import DashUsers from '../components/Admin/DashUsers';
 import DashComments from '../components/Admin/DashComments';
 import DashboardComp from '../components/Admin/DashboardComp';
+import DashArticles from '../components/Admin/DashArticles';
 
 
 export default function Dashboard() {
@@ -32,6 +33,8 @@ export default function Dashboard() {
       {tab === 'profile' && <DashProfile />}
       {/* posts... */}
       {tab === 'posts' && <DashPosts />}
+      {/* articles... */}
+      {tab === 'articles' && <DashArticles />}
       {/* users */}
       {tab === 'users' && <DashUsers />}
       {/* comments  */}
