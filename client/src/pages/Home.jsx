@@ -1,7 +1,7 @@
 import NewHero from '../components/Landing/NewHero';
 import { NewProjects } from '../components/Landing/NewProjects';
 import PostsSection from '../components/Landing/PostsSection';
-import { Articles } from '../components/Landing/Articles';
+import ArticlesLandingComponent from '../components/Articles/ArticlesLandingComponent';
 
 export default function Home() {
 
@@ -23,9 +23,9 @@ export default function Home() {
         <PostsSection />
       </section>
 
-      {/* ARTICLES SECTION */}
+      {/* ARTICLES SECTION   <ArticlesLanding /> */}
       <section className='bg-slate-100 dark:bg-slate-700'>
-        <Articles />
+        <ArticlesLandingComponent />
       </section>
     
     </main>

@@ -180,16 +180,7 @@ export default function UpdateArticle() {
             className='w-full h-72 object-cover'
           />
         )}
-        <ReactQuill
-          theme='snow'
-          value={formData.content}
-          placeholder='Write something...'
-          className='h-72 mb-12'
-          required
-          onChange={(value) => {
-            setFormData({ ...formData, content: value });
-          }}
-        />
+    
         <Button type='submit' gradientDuoTone='purpleToPink'>
           Update article
         </Button>

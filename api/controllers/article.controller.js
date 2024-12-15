@@ -1,6 +1,6 @@
 import Article from '../models/article.model.js';
 import { errorHandler } from '../utils/error.js';
-
+import { validateArticleData } from '../utils/validation.js';
 
 export const create = async (req, res, next) => {
 
@@ -8,8 +8,9 @@ export const create = async (req, res, next) => {
     return next(errorHandler(403, 'You are not allowed to create an article'));
   }
 
-  if (!req.body.title || !req.body.text || !req.body.link || !req.body.content) {
-    return next(errorHandler(400, 'Please provide all required fields'));
+  const errors = validateArticleData(req.body);
+  if (errors.length > 0) {
+    return next(errorHandler(400, errors.join(' ')));
   }
 
 
@@ -98,7 +99,6 @@ export const updatearticle = async (req, res, next) => {
       {
         $set: {
           title: req.body.title,
-          content: req.body.content,
           text: req.body.text,
           link: req.body.link,
           image: req.body.image,

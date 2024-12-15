@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useNavigate } from 'react-router-dom';
+import { validateArticleForm } from '../../utils/validation';
 
 
 export default function CreateArticle() {
@@ -64,6 +65,12 @@ export default function CreateArticle() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const errors = validateArticleForm(formData);
+    if (Object.keys(errors).length > 0) {
+      setPublishError(errors); // Store the errors to display in the UI
+      return;
+    }
 
     try {
       const res = await fetch('/api/article/create', {
@@ -162,15 +169,6 @@ export default function CreateArticle() {
             className='w-full h-72 object-cover'
           />
         )}
-        <ReactQuill
-          theme='snow'
-          placeholder='Write something...'
-          className='h-72 mb-12'
-          required
-          onChange={(value) => {
-            setFormData({ ...formData, content: value });
-          }}
-        />
         <Button type='submit' gradientDuoTone='purpleToPink'>
           Publish
         </Button>

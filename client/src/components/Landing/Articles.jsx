@@ -2,46 +2,16 @@
 import { useRef } from "react";
 import { useMotionValue, motion, useSpring, useTransform } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
-import article1 from "../../assets/images/FERN-Projects.webp";
-import article2 from "../../assets/images/MERN-Projects.webp";
-import article3 from "../../assets/images/NextJS-Projects.png";
-import article4 from "../../assets/images/Projects-Community.webp";
 
-export const Articles = () => {
+export const ArticlesLanding = ({article}) => {
     return (
-        <section className="py-16 max-w-5xl mx-auto">
-            <div className="text-center pb-10 px-4 md:px-2 lg:px-0">
-                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold">
-                    NighteCoding&apos;s exciting <span className="text-sky-600 dark:text-indigo-500">Articles</span>
-                </h2>
-                <p className="text-xl text-zinc-600 dark:text-slate-400 font-semibold mt-3">Our articles are a perfect match for an evening coffee</p>
-                <p className="text-xl text-zinc-600 dark:text-slate-400 font-semibold">With redirect link to the article</p>
-            </div>
-
-            <div className="mx-auto px-6 md:px-0">
+        <section className="py-8 max-w-5xl mx-auto">
+            <div className="mx-auto px-6 md:px-0 mt-4">
                 <Link
-                    heading="ReactJS"
-                    subheading="Read about FERM implementation"
-                    imgSrc={article1}
-                    href='#'
-                />
-                <Link
-                    heading="NextJS"
-                    subheading="NextJS with either Appwrite or Neon"
-                    imgSrc={article3}
-                    href='#'
-                />
-                <Link
-                    heading="NodeJS"
-                    subheading="Read about NodeJS in MERN"
-                    imgSrc={article2}
-                    href='#'
-                />
-                <Link
-                    heading="Tech"
-                    subheading="The newest trends in 2025"
-                    imgSrc={article4}
-                    href='#'
+                    heading={article.title}
+                    subheading={article.text}
+                    imgSrc={article.image}
+                    href={article.link}
                 />
             </div>
         </section>

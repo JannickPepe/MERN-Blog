@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { ArticlesLanding } from '../../components/Landing/Articles';
+import { ArticlesLanding } from '../Landing/Articles';
+import { Link } from 'react-router-dom';
 
 
-const Articles = () => {
+const ArticlesLandingComponent = () => {
     const [articles, setArticles] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -38,8 +39,7 @@ const Articles = () => {
     };
 
     return (
-        <section className="max-w-8xl mx-auto p-3 flex flex-col gap-8 py-10">
-
+        <section className="max-w-8xl mx-auto px-3 flex flex-col gap-8 py-10 md:py-20">
             <div className="text-center px-4 md:px-2 lg:px-0">
                 <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold">
                     NighteCoding&apos;s exciting <span className="text-sky-600 dark:text-indigo-500">Articles</span>
@@ -55,8 +55,9 @@ const Articles = () => {
                             <ArticlesLanding key={article._id} article={article} />
                         ))}
                     </div>
+
                     {/* Pagination Controls */}
-                    <div className="flex justify-center items-center gap-2">
+                    <div className="flex justify-center items-center gap-2 mt-4">
                         <button
                             onClick={handlePreviousPage}
                             disabled={currentPage === 1}
@@ -89,9 +90,14 @@ const Articles = () => {
                     </div>
                 </div>
             )}
+            
+            <Link to='/articles'>
+                <p className='text-center text-lg hover:underline'>See all articles</p>
+            </Link>
+        
         </section>
     );
 };
 
-export default Articles;
+export default ArticlesLandingComponent;
 
