@@ -21,9 +21,18 @@ const ArticleSchema = new mongoose.Schema(
         message: 'Please enter a valid URL.',
       },
     },
+    likes: { 
+      type: Number, 
+      default: 0 
+    },
+    likedByUsers: 
+    { type: [String], 
+      default: [] 
+    },
     image: {
       type: String,
-      required: [true, 'An image is required.'],
+      default:
+        'https://www.hostinger.com/tutorials/wp-content/uploads/sites/2/2021/09/how-to-write-a-blog-post.png',
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,

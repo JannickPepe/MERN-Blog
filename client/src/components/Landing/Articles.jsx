@@ -1,24 +1,90 @@
 /* eslint-disable react/prop-types */
-import { useRef } from "react";
+import { useSelector } from 'react-redux';  // Import Redux hooks
+import { useEffect, useRef, useState } from "react";
 import { useMotionValue, motion, useSpring, useTransform } from "framer-motion";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiThumbsDown, FiThumbsUp } from "react-icons/fi";
 
-export const ArticlesLanding = ({article}) => {
+export const ArticlesLanding = ({ article }) => {
+
+    const [likes, setLikes] = useState(article.likes || 0);
+    const [liked, setLiked] = useState(false);
+
+    const user = useSelector(state => state.user);
+    const userId = user?.id;
+    const token = user?.token;
+
+    useEffect(() => {
+        if (article.likedByUsers && userId) {
+            const userHasLiked = article.likedByUsers.includes(userId);
+            setLiked(userHasLiked);
+        }
+        setLikes(article.likes); // Ensure likes state matches article
+    }, [article, userId]);
+
+    const handleToggleLike = async () => {
+        try {
+            const res = await fetch(`/api/article/likearticle/${article._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                setLikes(data.likes);
+                setLiked(data.liked);
+            } else {
+                alert(data.message);
+            }
+
+        } catch (error) {
+            console.error('Failed to toggle like:', error);
+        }
+    };
+
     return (
         <section className="py-8 max-w-5xl mx-auto">
             <div className="mx-auto px-6 md:px-0 mt-4">
                 <Link
                     heading={article.title}
                     subheading={article.text}
+                    linkheading={article.link}
                     imgSrc={article.image}
                     href={article.link}
                 />
+
+                <div className="mt-4 flex items-center gap-4">
+                    {!liked && (
+                        <button
+                        className=" text-sky-600"
+                        onClick={handleToggleLike}
+                        >
+                        <FiThumbsUp />
+                        </button>
+                    )}
+
+                    {liked && (
+                        <button
+                        className=" text-red-600"
+                        onClick={handleToggleLike}
+                        >
+                        <FiThumbsDown />
+                        </button>
+                    )}
+
+                    <span>{likes} Likes</span>
+                </div>
+
             </div>
         </section>
     );
 };
 
-const Link = ({ heading, imgSrc, subheading, href }) => {
+
+const Link = ({ heading, imgSrc, subheading, href, linkheading }) => {
     const ref = useRef(null);
 
     const x = useMotionValue(0);
@@ -85,13 +151,16 @@ const Link = ({ heading, imgSrc, subheading, href }) => {
                 <span className="relative z-10 mt-2 block text-base text-neutral-500 dark:text-slate-400 transition-colors duration-500 group-hover:text-neutral-800 dark:group-hover:text-neutral-50">
                     {subheading}
                 </span>
+                <span className="relative z-10 mt-2 block text-xs font-serif font-light text-neutral-500 dark:text-slate-400 transition-colors duration-500 group-hover:text-neutral-800 dark:group-hover:text-neutral-50 group-hover:u">
+                    {linkheading}
+                </span>
             </div>
 
             <motion.img
                 style={{
                     top,
                     left,
-                    translateX: "-50%",
+                    translateX: "-30%",
                     translateY: "-50%",
                 }}
                 variants={{
@@ -118,7 +187,7 @@ const Link = ({ heading, imgSrc, subheading, href }) => {
                 transition={{ type: "spring" }}
                 className="relative z-10 p-4"
             >
-                <FiArrowRight className="text-5xl text-neutral-50" />
+                <FiArrowRight className="text-5xl text-slate-600" />
             </motion.div>
         </motion.a>
     );
