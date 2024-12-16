@@ -56,7 +56,7 @@ export const ArticlesLanding = ({ article }) => {
                     href={article.link}
                 />
 
-                <div className="mt-4 flex items-center gap-4">
+                <div className="mt-4 flex items-center gap-2">
                     {!liked && (
                         <button
                         className=" text-sky-600"
@@ -75,7 +75,7 @@ export const ArticlesLanding = ({ article }) => {
                         </button>
                     )}
 
-                    <span>{likes} Likes</span>
+                    <span className='bg-sky-600 px-2 py-1 rounded-full text-zinc-200 font-medium'>{likes} Likes</span>
                 </div>
 
             </div>

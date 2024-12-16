@@ -112,3 +112,28 @@ export const updatearticle = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getArticleLikesStats = async (req, res, next) => {
+  try {
+    const now = new Date();
+    const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+
+    // Aggregate the total likes and likes from the last month
+    const totalLikes = await Article.aggregate([
+      { $group: { _id: null, totalLikes: { $sum: "$likes" } } },
+    ]);
+
+    const lastMonthArticlesLikes = await Article.aggregate([
+      { $match: { updatedAt: { $gte: oneMonthAgo } } },
+      { $group: { _id: null, totalLikes: { $sum: "$likes" } } },
+    ]);
+
+    res.status(200).json({
+      totalLikes: totalLikes[0]?.totalLikes || 0,
+      lastMonthArticlesLikes: lastMonthArticlesLikes[0]?.totalLikes || 0,
+    });
+  } catch (error) {
+    console.error("Error in getArticleLikesStats:", error);
+    next(error);
+  }
+};
