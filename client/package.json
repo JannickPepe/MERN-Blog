@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
+    "date-fns": "^4.1.0",
+    "dayzed": "^3.2.3",
     "firebase": "^10.7.1",
     "flowbite-react": "^0.7.0",
     "framer-motion": "^11.12.0",

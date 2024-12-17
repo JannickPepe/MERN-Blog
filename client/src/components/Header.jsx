@@ -93,6 +93,7 @@ export default function Header() {
         <Button className='w-9 md:w-12 h-7 md:h-10 sm:inline mt-1.5 md:mt-0' color='gray' pill onClick={() => dispatch(toggleTheme())} >
           {theme === 'light' ? <FaMoon /> : <FaSun />  }
         </Button>
+
         {currentUser ? (
           <Dropdown
             arrowIcon={false}
@@ -107,6 +108,11 @@ export default function Header() {
                 {currentUser.email}
               </span>
             </Dropdown.Header>
+            {currentUser.isAdmin && (
+              <Link to={'/dashboard?tab=dash'}>
+                <Dropdown.Item>Dashboard</Dropdown.Item>
+              </Link>
+            )}
             <Link to={'/dashboard?tab=profile'}>
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>

@@ -2,6 +2,8 @@ import Article from '../models/article.model.js';
 import { errorHandler } from '../utils/error.js';
 import { validateArticleData } from '../utils/validation.js';
 
+
+//
 export const create = async (req, res, next) => {
 
   if (!req.user.isAdmin) {
@@ -12,7 +14,6 @@ export const create = async (req, res, next) => {
   if (errors.length > 0) {
     return next(errorHandler(400, errors.join(' ')));
   }
-
 
   // Have our newPost as new Post with everything from body, slug and userId
   const newArticle = new Article({
@@ -30,21 +31,21 @@ export const create = async (req, res, next) => {
   }
 };
 
-
+//
 export const getarticles = async (req, res, next) => {
-
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 9;
-    const sortDirection = req.query.order === 'asc' ? 1 : -1;
+    const order = req.query.order === 'desc' ? -1 : 1; 
+    const sortBy = req.query.sortBy || 'rank'; // Default to rank if not provided
 
     const articles = await Article.find({
       ...(req.query.userId && { userId: req.query.userId }),
       ...(req.query.articleId && { _id: req.query.articleId }),
     })
-      .sort({ updatedAt: sortDirection })
-      .skip(startIndex)
-      .limit(limit);
+    .sort({ [sortBy]: order })
+    .skip(startIndex)
+    .limit(limit);
 
     const totalArticles = await Article.countDocuments();
 
@@ -70,7 +71,7 @@ export const getarticles = async (req, res, next) => {
   }
 };
 
-
+//
 export const deletearticle = async (req, res, next) => {
 
   if (!req.user.isAdmin || req.user.id !== req.params.userId) {
@@ -86,7 +87,7 @@ export const deletearticle = async (req, res, next) => {
   }
 };
 
-
+//
 export const updatearticle = async (req, res, next) => {
 
   if (!req.user.isAdmin || req.user.id !== req.params.userId) {
@@ -113,6 +114,7 @@ export const updatearticle = async (req, res, next) => {
   }
 };
 
+//
 export const getArticleLikesStats = async (req, res, next) => {
   try {
     const now = new Date();
@@ -135,5 +137,28 @@ export const getArticleLikesStats = async (req, res, next) => {
   } catch (error) {
     console.error("Error in getArticleLikesStats:", error);
     next(error);
+  }
+};
+
+//
+export const updateArticleRanks = async (req, res) => {
+  try {
+    const { updatedArticles } = req.body;
+
+    if (!updatedArticles || !Array.isArray(updatedArticles)) {
+      return res.status(400).json({ message: 'Invalid data format. Expected an array.' });
+    }
+
+    for (const article of updatedArticles) {
+      if (!article._id || article.rank === undefined) {
+        return res.status(400).json({ message: 'Each updated article must have _id and rank.' });
+      }
+      await Article.findByIdAndUpdate(article._id, { rank: article.rank });
+    }
+
+    return res.status(200).json({ message: 'Ranks updated successfully.' });
+  } catch (error) {
+    console.error('Error updating ranks:', error);
+    res.status(500).json({ message: 'Internal Server Error while updating ranks.' });
   }
 };

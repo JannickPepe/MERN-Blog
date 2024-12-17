@@ -39,6 +39,10 @@ const ArticleSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
+    rank: { 
+      type: Number, 
+      default: 0 
+  },
   },
   { timestamps: true }
 );
