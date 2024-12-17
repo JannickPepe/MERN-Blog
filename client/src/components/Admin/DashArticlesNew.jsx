@@ -5,6 +5,8 @@ import { FiChevronDown, FiChevronUp, FiTrash2, FiEdit } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Modal, Button } from "flowbite-react";
+import { GrPowerReset } from "react-icons/gr";
+
 
 const DashArticlesNew = () => {
     const { currentUser } = useSelector((state) => state.user);
@@ -36,6 +38,7 @@ const DashArticlesNew = () => {
             fetchArticles();
         }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentUser._id]);
 
     // Show More Articles
@@ -154,7 +157,7 @@ const DashArticlesNew = () => {
         
             setUserArticles(resetArticles);
             await saveRankOrder(resetArticles); // Save reset ranks to the backend
-            alert('Rank order reset to original creation order!');
+            
         } catch (error) {
             console.error('Error resetting rank order:', error);
         }
@@ -162,13 +165,19 @@ const DashArticlesNew = () => {
     
 
     return (
-        <div className="w-full">
-        
-            <div className="w-full bg-zinc-200 shadow-lg rounded-lg overflow-x-scroll mx-auto">
-                <table className="w-full">
+        <div className="">
+            <div className=" bg-zinc-200 shadow-lg rounded-lg overflow-x-scroll mx-auto">
+                <table className="">
                     <thead>
                         <tr className="border-b-[1px] border-slate-200 text-slate-800 text-sm uppercase">
-                        <th className="pl-4 w-8"></th>
+                        <th className="pl-4 w-8">
+                            <button
+                                onClick={resetRankOrder}
+                                className="mt-2 hover:rotate-180 transition-transform duration-300"
+                            >
+                                <GrPowerReset className="h-5 w-5" />
+                            </button>
+                        </th>
                         <th className="text-start p-4 font-medium">Date Updated</th>
                         <th className="text-start p-4 font-medium">Image</th>
                         <th className="text-start p-4 font-medium">Title</th>
@@ -201,13 +210,6 @@ const DashArticlesNew = () => {
                     </button>
                 )}
             </div>
-
-            <button
-                onClick={resetRankOrder}
-                className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            >
-                Reset Rank Order
-            </button>
 
             {/* Modal for Confirming Deletion */}
             <Modal show={showModal} onClose={() => setShowModal(false)} popup size="md">
@@ -245,11 +247,11 @@ const TableRows = ({ article, index, shift, confirmDelete }) => {
             className={`text-sm ${index % 2 ? "bg-zinc-200" : "bg-zinc-100"}`}
         >
             <td className="pl-4 w-8 text-lg">
-                <button className="hover:text-violet-600" onClick={() => shift(article._id, "up")}>
-                    <FiChevronUp />
+                <button className="hover:text-sky-600" onClick={() => shift(article._id, "up")}>
+                    <FiChevronUp className="hover:scale-110" />
                 </button>
-                <button className="hover:text-violet-600" onClick={() => shift(article._id, "down")}>
-                    <FiChevronDown />
+                <button className="hover:text-sky-600" onClick={() => shift(article._id, "down")}>
+                    <FiChevronDown className="hover:scale-110" />
                 </button>
             </td>
             <td className="p-4 font-medium">
@@ -259,12 +261,12 @@ const TableRows = ({ article, index, shift, confirmDelete }) => {
                 <img
                     src={article.image}
                     alt={article.title}
-                    className="w-14 h-14 rounded-full bg-slate-300 object-cover"
+                    className="w-10 md:w-14 h-10 md:h-14 rounded-full bg-slate-300 object-cover"
                 />
             </td>
             <td className="p-4 font-medium">{article.title}</td>
             <td className="p-4 font-normal">
-                <div className="flex items-center gap-1">
+                <div className="md:flex items-center gap-1 w-[240px]">
                     <p>
                         {expanded
                         ? article.text // Show full text if expanded

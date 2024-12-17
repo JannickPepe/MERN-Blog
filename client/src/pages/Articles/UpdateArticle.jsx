@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
-import ReactQuill from 'react-quill';
+import { useContext } from 'react';
+import { NotificationContext } from '../../components/NotificationContext';
+import { Alert, Button, FileInput,  TextInput } from 'flowbite-react';
 import 'react-quill/dist/quill.snow.css';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable, } from 'firebase/storage';
 import { app } from '../../firebase';
@@ -18,10 +19,12 @@ export default function UpdateArticle() {
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
   const { articleId } = useParams();
+  const { showNotification } = useContext(NotificationContext);
 
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
 
+  //
   useEffect(() => {
     try {
       const fetchArticle = async () => {
@@ -44,6 +47,7 @@ export default function UpdateArticle() {
     }
   }, [articleId]);
 
+  //
   const handleUpdloadImage = async () => {
     try {
       if (!file) {
@@ -80,6 +84,8 @@ export default function UpdateArticle() {
       console.log(error);
     }
   };
+
+  //
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -98,12 +104,17 @@ export default function UpdateArticle() {
 
       if (res.ok) {
         setPublishError(null);
-        navigate(`/articles`);
+        // Show the notification globally
+        showNotification("Article updated successfully!");
+        // Immediately navigate
+        navigate(`/dashboard?tab=articles`);
       }
     } catch (error) {
       setPublishError('Something went wrong');
     }
   };
+
+
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
       <h1 className='text-center text-3xl my-7 font-semibold'>Update article</h1>
@@ -181,7 +192,7 @@ export default function UpdateArticle() {
           />
         )}
     
-        <Button type='submit' gradientDuoTone='purpleToPink'>
+        <Button type='submit' className='mx-auto my-2 font-medium bg-teal-600 text-white w-fit transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]'>
           Update article
         </Button>
         {publishError && (

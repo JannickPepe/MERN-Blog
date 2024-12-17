@@ -11,7 +11,7 @@ const ArticlePageCreate = () => {
         <div>
             {currentUser.isAdmin && (
                 <Link to={'/create-article'}>
-                    <Button type='button' gradientDuoTone='purpleToPink' className='w-fuææ mx-auto my-4 md:my-8'>
+                    <Button type='button' className='mx-auto my-4 md:my-8  font-medium bg-teal-600 text-white w-fit transition-all shadow-[3px_3px_0px_black] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]'>
                         Create an article
                     </Button>
                 </Link>

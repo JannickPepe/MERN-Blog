@@ -46,8 +46,8 @@ export const ArticlesLanding = ({ article }) => {
     };
 
     return (
-        <section className="py-8 max-w-5xl mx-auto">
-            <div className="mx-auto px-6 md:px-0 mt-4">
+        <section className="py-6 md:py-8 md:max-w-5xl mx-auto">
+            <div className="mx-auto px-2 md:px-0 mt-4">
                 <Link
                     heading={article.title}
                     subheading={article.text}
@@ -148,7 +148,7 @@ const Link = ({ heading, imgSrc, subheading, href, linkheading }) => {
                         </motion.span>
                     ))}
                 </motion.span>
-                <span className="relative z-10 mt-2 block text-base text-neutral-500 dark:text-slate-400 transition-colors duration-500 group-hover:text-neutral-800 dark:group-hover:text-neutral-50">
+                <span className="relative max-w-sm z-10 mt-2 block text-base text-neutral-500 dark:text-slate-400 transition-colors duration-500 group-hover:text-neutral-800 dark:group-hover:text-neutral-50">
                     {subheading}
                 </span>
                 <span className="relative z-10 mt-2 block text-xs font-serif font-light text-neutral-500 dark:text-slate-400 transition-colors duration-500 group-hover:text-neutral-800 dark:group-hover:text-neutral-50 group-hover:u">
@@ -169,7 +169,7 @@ const Link = ({ heading, imgSrc, subheading, href, linkheading }) => {
                 }}
                 transition={{ type: "spring" }}
                 src={imgSrc}
-                className="absolute z-0 h-20 w-28 rounded-lg object-cover md:h-48 md:w-64"
+                className="absolute z-0 h-20 w-28 rounded-lg object-cover md:h-48 md:w-64 hidden md:block"
                 alt={`Image representing a link for ${heading}`}
             />
 
