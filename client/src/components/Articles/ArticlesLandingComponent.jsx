@@ -1,35 +1,39 @@
-import React, { Suspense, useCallback, useEffect, useState } from 'react';
+import React, { Suspense, useCallback } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchArticles } from '../../api/fetchArticles';
 
 // Lazy load the ArticlesLanding component
 const ArticlesLanding = React.lazy(() => import('../../components/Landing/Articles'));
 
 const ArticlesLandingComponent = React.memo(() => {
-    const [articles, setArticles] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0);
-    const articlesPerPage = 6; // Change this value to modify the default posts per page
+    const queryClient = useQueryClient();
+    const articlesPerPage = 6;
+    const [currentPage, setCurrentPage] = React.useState(1);
 
-    // Fetch posts based on the current page
-    useEffect(() => {
-        const loadArticles = async () => {
-            try {
-                const data = await fetchArticles((currentPage - 1) * articlesPerPage, articlesPerPage);
-                setArticles(data.articles);
-                setTotalPages(Math.ceil(data.totalArticles / articlesPerPage));
-            } catch (error) {
-                console.error('Error loading articles:', error);
-            }
-        };
+    // Fetch articles using React Query
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ['articles', currentPage],
+        queryFn: () => fetchArticles((currentPage - 1) * articlesPerPage, articlesPerPage),
+        keepPreviousData: true, // Retain previous page data while loading new data
+    });
 
-        loadArticles();
-    }, [currentPage]);
+    // Prefetch the next page
+    React.useEffect(() => {
+        if (data?.totalArticles && currentPage < Math.ceil(data.totalArticles / articlesPerPage)) {
+            queryClient.prefetchQuery({
+                queryKey: ['articles', currentPage + 1],
+                queryFn: () =>
+                    fetchArticles(currentPage * articlesPerPage, articlesPerPage),
+            });
+        }
+    }, [currentPage, queryClient, data]);
 
+    // Memoized handlers for pagination
     const handleNextPage = useCallback(() => {
-        if (currentPage < totalPages) {
+        if (data?.totalArticles && currentPage < Math.ceil(data.totalArticles / articlesPerPage)) {
             setCurrentPage((prevPage) => prevPage + 1);
         }
-    }, [currentPage, totalPages]);
+    }, [currentPage, data]);
 
     const handlePreviousPage = useCallback(() => {
         if (currentPage > 1) {
@@ -37,22 +41,36 @@ const ArticlesLandingComponent = React.memo(() => {
         }
     }, [currentPage]);
 
+    const handlePageChange = useCallback(
+        (page) => {
+            setCurrentPage(page);
+        },
+        [] // `setCurrentPage` is a stable function, so no dependencies are needed
+    );
+
+    if (isLoading) return <p>Loading Articles...</p>;
+    if (isError) return <p className="text-red-500">Failed to load articles.</p>;
+
     return (
         <section className="max-w-8xl mx-auto p-3 flex flex-col gap-8 py-10 min-h-screen">
-
             <div className="text-center px-4 md:px-2 lg:px-0">
                 <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold">
-                    NighteCoding&apos;s exciting <span className="text-sky-600 dark:text-indigo-500">Articles</span>
+                    NighteCoding&apos;s exciting{' '}
+                    <span className="text-sky-600 dark:text-indigo-500">Articles</span>
                 </h2>
-                <p className="text-xl text-zinc-600 dark:text-slate-400 font-semibold mt-3">Our articles are a perfect match for an evening coffee.</p>
-                <p className="text-xl text-zinc-600 dark:text-slate-400 font-semibold">A good learning is on the go!</p>
+                <p className="text-xl text-zinc-600 dark:text-slate-400 font-semibold mt-3">
+                    Our articles are a perfect match for an evening coffee.
+                </p>
+                <p className="text-xl text-zinc-600 dark:text-slate-400 font-semibold">
+                    A good learning is on the go!
+                </p>
             </div>
 
-            {articles && articles.length > 0 && (
+            {data.articles && data.articles.length > 0 && (
                 <div>
                     <div className="max-w-3xl mx-auto">
-                        <Suspense fallback={<p>Loading Articles Landing...</p>}>
-                            {articles.map((article) => (
+                        <Suspense fallback={<p>Loading Articles Landing component..</p>}>
+                            {data.articles.map((article) => (
                                 <ArticlesLanding key={article._id} article={article} />
                             ))}
                         </Suspense>
@@ -68,23 +86,23 @@ const ArticlesLandingComponent = React.memo(() => {
                             Previous
                         </button>
 
-                        {[...Array(totalPages)].map((_, index) => (
-                        <button
-                            key={index}
-                            onClick={() => setCurrentPage(index + 1)}
-                            className={`px-4 py-2 rounded-lg ${
-                                currentPage === index + 1
-                                ? 'bg-sky-600 text-gray-200'
-                                : 'bg-sky-600 text-gray-200 hover:bg-gray-700'
-                            }`}
-                        >
-                            {index + 1}
-                        </button>
+                        {[...Array(Math.ceil(data.totalArticles / articlesPerPage))].map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => handlePageChange(index + 1)}
+                                className={`px-4 py-2 rounded-lg ${
+                                    currentPage === index + 1
+                                        ? 'bg-sky-600 text-gray-200'
+                                        : 'bg-sky-600 text-gray-200 hover:bg-gray-700'
+                                }`}
+                            >
+                                {index + 1}
+                            </button>
                         ))}
 
                         <button
                             onClick={handleNextPage}
-                            disabled={currentPage === totalPages}
+                            disabled={currentPage === Math.ceil(data.totalArticles / articlesPerPage)}
                             className="px-4 py-2 bg-gray-200 text-gray-700 hover:text-gray-200 rounded-lg hover:bg-gray-700 disabled:opacity-50"
                         >
                             Next
@@ -95,8 +113,8 @@ const ArticlesLandingComponent = React.memo(() => {
         </section>
     );
 });
+
 // Add displayName
-ArticlesLandingComponent.displayName = 'Articles Landing Section';
+ArticlesLandingComponent.displayName = 'Articles Landing component';
 
 export default ArticlesLandingComponent;
-

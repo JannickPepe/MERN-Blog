@@ -6,12 +6,12 @@ import { Link } from 'react-router-dom';
 import { BiLike } from "react-icons/bi";
 import { GrArticle } from "react-icons/gr";
 
-
 // Dynamically import ArticleGraph using React.lazy
-const ArticleGraph = React.lazy(() => import('./ArticleGraph'));
+const NewArticleChart = React.lazy(() => import('./NewArticleGraph'));
+const ArticleLineChart = React.lazy(() => import('./ArticleLineChart'));
+
 
 export default function DashboardComp() {
-
   const [users, setUsers] = useState([]);
   const [comments, setComments] = useState([]);
   const [posts, setPosts] = useState([]);
@@ -224,13 +224,18 @@ export default function DashboardComp() {
       </section>
 
       <section className='flex flex-wrap gap-4 py-3 mx-auto justify-center'>
-        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800'>
-          
+        <div className='flex flex-col w-full shadow-md p-2 rounded-md dark:bg-gray-800'>
+
           {/* Add a Suspense fallback for lazy-loaded components */}
-          <Suspense fallback={<p>Loading graph...</p>}>
-            <ArticleGraph />
-          </Suspense>
-          
+          <div className='flex justify-center items-center gap-8 max-w-7xl mx-auto py-8 bg-zinc-300 px-6 rounded-md'>
+            <Suspense fallback={<p>Loading graph...</p>}>
+              <NewArticleChart />
+            </Suspense>
+            <Suspense fallback={<p>Loading graph...</p>}>
+              <ArticleLineChart />
+            </Suspense>
+          </div>
+
           <div className='flex justify-between  p-3 text-sm font-semibold'>
             <h1 className='text-center p-2'>Recent users</h1>
             <Button outline gradientDuoTone='purpleToPink'>
@@ -261,7 +266,7 @@ export default function DashboardComp() {
           </Table>
         </div>
 
-        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800'>
+        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800 py-8 bg-zinc-300 px-6'>
           <div className='flex justify-between  p-3 text-sm font-semibold'>
             <h1 className='text-center p-2'>Recent comments</h1>
             <Button outline gradientDuoTone='purpleToPink'>
@@ -288,7 +293,7 @@ export default function DashboardComp() {
           </Table>
         </div>
 
-        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800'>
+        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800 py-8 bg-zinc-300 px-6'>
           <div className='flex justify-between p-3 text-sm font-semibold'>
             <h1 className='text-center p-2'>Recent posts</h1>
             <Button outline gradientDuoTone='purpleToPink'>

@@ -68,7 +68,7 @@ const ArticlesLanding = React.memo(({ article }) => {
     );
 });
 // Add displayName
-ArticlesLanding.displayName = 'ArticlesLanding';
+ArticlesLanding.displayName = 'Articles Landing component';
 
 export default ArticlesLanding;
 
