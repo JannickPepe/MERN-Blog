@@ -1,8 +1,8 @@
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend } from 'chart.js';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { useState } from 'react';
+import { fetchArticleStats } from '../../api/fetchArticleCharts'; // Import the API function
 
 // Register required Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
@@ -10,16 +10,9 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip,
 const ArticleGraph = () => {
   const [timeRange, setTimeRange] = useState('24h');
 
-  const fetchGraphData = async () => {
-    const { data } = await axios.get('/api/article/stats', {
-      params: { timeRange },
-    });
-    return data;
-  };
-
   const { data: graphData = { articles: [], totalArticles: 0 }, isLoading, isError } = useQuery({
     queryKey: ['articleStats', timeRange],
-    queryFn: fetchGraphData,
+    queryFn: () => fetchArticleStats(timeRange), // Use the API function
     keepPreviousData: true,
   });
 

@@ -1,47 +1,32 @@
 /* eslint-disable react/prop-types */
 import { useSelector } from 'react-redux';  // Import Redux hooks
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useMotionValue, motion, useSpring, useTransform } from "framer-motion";
 import { FiArrowRight, FiThumbsDown, FiThumbsUp } from "react-icons/fi";
+import { toggleArticleLike } from '../../api/fetchArticles';
 
-export const ArticlesLanding = ({ article }) => {
+const ArticlesLanding = React.memo(({ article }) => {
 
     const [likes, setLikes] = useState(article.likes || 0);
     const [liked, setLiked] = useState(false);
-
     const user = useSelector(state => state.user);
     const userId = user?.id;
     const token = user?.token;
 
     useEffect(() => {
-        if (article.likedByUsers && userId) {
-            const userHasLiked = article.likedByUsers.includes(userId);
-            setLiked(userHasLiked);
+        if (article.likedByUsers?.includes(userId)) {
+            setLiked(true);
         }
-        setLikes(article.likes); // Ensure likes state matches article
+        setLikes(article.likes);
     }, [article, userId]);
 
     const handleToggleLike = async () => {
         try {
-            const res = await fetch(`/api/article/likearticle/${article._id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-
-            const data = await res.json();
-
-            if (res.ok) {
-                setLikes(data.likes);
-                setLiked(data.liked);
-            } else {
-                alert(data.message);
-            }
-
+            const data = await toggleArticleLike(article._id, token);
+            setLikes(data.likes);
+            setLiked(data.liked);
         } catch (error) {
-            console.error('Failed to toggle like:', error);
+            console.error('Error toggling like:', error);
         }
     };
 
@@ -81,7 +66,13 @@ export const ArticlesLanding = ({ article }) => {
             </div>
         </section>
     );
-};
+});
+// Add displayName
+ArticlesLanding.displayName = 'ArticlesLanding';
+
+export default ArticlesLanding;
+
+
 
 
 const Link = ({ heading, imgSrc, subheading, href, linkheading }) => {
@@ -169,6 +160,7 @@ const Link = ({ heading, imgSrc, subheading, href, linkheading }) => {
                 }}
                 transition={{ type: "spring" }}
                 src={imgSrc}
+                loading="lazy"
                 className="absolute z-0 h-20 w-28 rounded-lg object-cover md:h-48 md:w-64 hidden md:block"
                 alt={`Image representing a link for ${heading}`}
             />

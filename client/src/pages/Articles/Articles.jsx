@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
-import { ArticlesLanding } from '../../components/Landing/Articles';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
+import { fetchArticles } from '../../api/fetchArticles';
 
+// Lazy load the ArticlesLanding component
+const ArticlesLanding = React.lazy(() => import('../../components/Landing/Articles'));
 
-const Articles = () => {
+const Articles = React.memo(() => {
     const [articles, setArticles] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -10,35 +12,33 @@ const Articles = () => {
 
     // Fetch posts based on the current page
     useEffect(() => {
-        const fetchArticles = async () => {
+        const loadArticles = async () => {
             try {
-                const res = await fetch(`/api/article/getarticles?startIndex=${(currentPage - 1) * articlesPerPage}&limit=${articlesPerPage}`);
-                const data = await res.json();
+                const data = await fetchArticles((currentPage - 1) * articlesPerPage, articlesPerPage);
                 setArticles(data.articles);
                 setTotalPages(Math.ceil(data.totalArticles / articlesPerPage));
-
             } catch (error) {
-                console.error('Error fetching posts:', error);
+                console.error('Error loading articles:', error);
             }
         };
 
-        fetchArticles();
+        loadArticles();
     }, [currentPage]);
 
-    const handleNextPage = () => {
+    const handleNextPage = useCallback(() => {
         if (currentPage < totalPages) {
             setCurrentPage((prevPage) => prevPage + 1);
         }
-    };
+    }, [currentPage, totalPages]);
 
-    const handlePreviousPage = () => {
+    const handlePreviousPage = useCallback(() => {
         if (currentPage > 1) {
             setCurrentPage((prevPage) => prevPage - 1);
         }
-    };
+    }, [currentPage]);
 
     return (
-        <section className="max-w-8xl mx-auto p-3 flex flex-col gap-8 py-10">
+        <section className="max-w-8xl mx-auto p-3 flex flex-col gap-8 py-10 min-h-screen">
 
             <div className="text-center px-4 md:px-2 lg:px-0">
                 <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold">
@@ -51,10 +51,13 @@ const Articles = () => {
             {articles && articles.length > 0 && (
                 <div>
                     <div className="max-w-3xl mx-auto">
-                        {articles.map((article) => (
-                            <ArticlesLanding key={article._id} article={article} />
-                        ))}
+                        <Suspense fallback={<p>Loading Articles Landing...</p>}>
+                            {articles.map((article) => (
+                                <ArticlesLanding key={article._id} article={article} />
+                            ))}
+                        </Suspense>
                     </div>
+
                     {/* Pagination Controls */}
                     <div className="flex justify-center items-center gap-2">
                         <button
@@ -91,7 +94,9 @@ const Articles = () => {
             )}
         </section>
     );
-};
+});
+// Add displayName
+Articles.displayName = 'Articles Page';
 
 export default Articles;
 

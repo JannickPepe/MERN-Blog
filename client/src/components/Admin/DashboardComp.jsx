@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import { HiAnnotation, HiArrowNarrowUp, HiDocumentText, HiOutlineUserGroup, } from 'react-icons/hi';
 import { Button, Table } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 import { BiLike } from "react-icons/bi";
 import { GrArticle } from "react-icons/gr";
-import ArticleGraph from './ArticleGraph';
 
+
+// Dynamically import ArticleGraph using React.lazy
+const ArticleGraph = React.lazy(() => import('./ArticleGraph'));
 
 export default function DashboardComp() {
 
@@ -223,7 +225,12 @@ export default function DashboardComp() {
 
       <section className='flex flex-wrap gap-4 py-3 mx-auto justify-center'>
         <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800'>
-          <ArticleGraph />
+          
+          {/* Add a Suspense fallback for lazy-loaded components */}
+          <Suspense fallback={<p>Loading graph...</p>}>
+            <ArticleGraph />
+          </Suspense>
+          
           <div className='flex justify-between  p-3 text-sm font-semibold'>
             <h1 className='text-center p-2'>Recent users</h1>
             <Button outline gradientDuoTone='purpleToPink'>
@@ -302,6 +309,7 @@ export default function DashboardComp() {
                       <img
                         src={post.image}
                         alt='user'
+                        loading="lazy"
                         className='w-14 h-10 rounded-md bg-gray-500'
                       />
                     </Table.Cell>
@@ -336,6 +344,7 @@ export default function DashboardComp() {
                       <img
                         src={article.image}
                         alt='user'
+                        loading="lazy"
                         className='w-14 h-10 rounded-md bg-gray-500'
                       />
                     </Table.Cell>
