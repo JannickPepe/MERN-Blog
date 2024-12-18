@@ -22,35 +22,35 @@ import { NotificationProvider } from './components/NotificationContext';
 
 export default function App() {
   return (
-   
+    <NotificationProvider>
       <BrowserRouter>
         <ScrollToTop />
         <Header />
         <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/about' element={<About />} />
-            <Route path='/contact' element={<Contact />} />
-            <Route path='/sign-in' element={<SignIn />} />
-            <Route path='/sign-up' element={<SignUp />} />
-            <Route path='/search' element={<Search />} />
+          <Route path='/' element={<Home />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/contact' element={<Contact />} />
+          <Route path='/sign-in' element={<SignIn />} />
+          <Route path='/sign-up' element={<SignUp />} />
+          <Route path='/search' element={<Search />} />
 
-            <Route element={<PrivateRoute />}>
-              <Route path='/dashboard' element={<Dashboard />} />
-            </Route>
+          <Route element={<PrivateRoute />}>
+            <Route path='/dashboard' element={<Dashboard />} />
+          </Route>
             
-            <Route element={<OnlyAdminPrivateRoute />}>
-              <Route path='/create-post' element={<CreatePost />} />
-              <Route path='/update-post/:postId' element={<UpdatePost />} />
-              <Route path='/create-article' element={<CreateArticle />} />
-              <Route path='/update-article/:articleId' element={<UpdateArticle />} />
-            </Route>
+          <Route element={<OnlyAdminPrivateRoute />}>
+            <Route path='/create-post' element={<CreatePost />} />
+            <Route path='/update-post/:postId' element={<UpdatePost />} />
+            <Route path='/create-article' element={<CreateArticle />} />
+            <Route path='/update-article/:articleId' element={<UpdateArticle />} />
+          </Route>
 
-            <Route path='/articles' element={<Articles />} />
-            <Route path='/projects' element={<Projects />} />
-            <Route path='/post/:postSlug' element={<PostPage />} />
+          <Route path='/articles' element={<Articles />} />
+          <Route path='/projects' element={<Projects />} />
+          <Route path='/post/:postSlug' element={<PostPage />} />
         </Routes>
         <Footer />
       </BrowserRouter>
-  
+    </NotificationProvider>
   );
 }
