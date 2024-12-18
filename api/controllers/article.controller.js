@@ -162,3 +162,57 @@ export const updateArticleRanks = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error while updating ranks.' });
   }
 };
+
+//
+export const getArticleStats = async (req, res, next) => {
+  try {
+    const { timeRange } = req.query;
+
+    // Define time ranges
+    const now = new Date();
+    let startDate;
+
+    switch (timeRange) {
+      case '24h':
+        startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000); // Last 24 hours
+        break;
+      case '7d':
+        startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // Last 7 days
+        break;
+      case '30d':
+        startDate = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate()); // Last 30 days
+        break;
+      default:
+        return res.status(400).json({ message: 'Invalid time range' });
+    }
+
+    // Fetch articles created within the time range
+    const articles = await Article.aggregate([
+      {
+        $match: { createdAt: { $gte: startDate } },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } }, // Sort by date
+    ]);
+
+    // Count total articles
+    const totalArticles = await Article.countDocuments();
+
+    res.status(200).json({
+      articles: articles.map((item) => ({
+        date: item._id,
+        count: item.count,
+      })),
+      totalArticles,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

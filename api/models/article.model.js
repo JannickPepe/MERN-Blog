@@ -47,6 +47,11 @@ const ArticleSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Adding indexes
+ArticleSchema.index({ rank: 1 }); // Index for sorting by rank
+ArticleSchema.index({ likedByUsers: 1 }); // Index for querying likedByUsers
+ArticleSchema.index({ createdAt: -1 }); // Index for filtering by creation date
+ArticleSchema.index({ updatedAt: -1 }); // Index for filtering by update date
 
 
 export default mongoose.model('Article', ArticleSchema);
