@@ -22,7 +22,7 @@ import { NotificationProvider } from './components/NotificationContext';
 
 export default function App() {
   return (
-    <NotificationProvider>
+   
       <BrowserRouter>
         <ScrollToTop />
         <Header />
@@ -51,6 +51,6 @@ export default function App() {
         </Routes>
         <Footer />
       </BrowserRouter>
-    </NotificationProvider>
+  
   );
 }
