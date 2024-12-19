@@ -1,10 +1,9 @@
-import React, { Suspense, useCallback, useMemo } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchArticles } from '../../api/fetchArticles';
-
+import React, { Suspense, useCallback, useMemo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchArticles } from "../../api/fetchArticles";
 
 // Lazy load the ArticlesLanding component
-const ArticlesLanding = React.lazy(() => import('../../components/Landing/Articles'));
+const ArticlesLanding = React.lazy(() => import("../../components/Landing/Articles"));
 
 const Articles = React.memo(() => {
     const queryClient = useQueryClient();
@@ -13,18 +12,17 @@ const Articles = React.memo(() => {
 
     // Fetch articles using React Query
     const { data, isLoading, isError } = useQuery({
-        queryKey: ['articles', currentPage],
+        queryKey: ["articles", currentPage],
         queryFn: () => fetchArticles((currentPage - 1) * articlesPerPage, articlesPerPage),
-        keepPreviousData: true, // Retain previous page data while loading new data
+        keepPreviousData: true,
     });
 
     // Prefetch the next page
     React.useEffect(() => {
         if (data?.totalArticles && currentPage < Math.ceil(data.totalArticles / articlesPerPage)) {
             queryClient.prefetchQuery({
-                queryKey: ['articles', currentPage + 1],
-                queryFn: () =>
-                    fetchArticles(currentPage * articlesPerPage, articlesPerPage),
+                queryKey: ["articles", currentPage + 1],
+                queryFn: () => fetchArticles(currentPage * articlesPerPage, articlesPerPage),
             });
         }
     }, [currentPage, queryClient, data]);
@@ -62,8 +60,8 @@ const Articles = React.memo(() => {
                 onClick={() => handlePageChange(index + 1)}
                 className={`px-4 py-2 rounded-lg ${
                     currentPage === index + 1
-                        ? 'bg-sky-600 text-gray-200'
-                        : 'bg-sky-600 text-gray-200 hover:bg-gray-700'
+                        ? "bg-sky-600 text-gray-200"
+                        : "bg-sky-600 text-gray-200 hover:bg-gray-700"
                 }`}
             >
                 {index + 1}
@@ -71,14 +69,33 @@ const Articles = React.memo(() => {
         ));
     }, [currentPage, handlePageChange, totalPages]);
 
-    if (isLoading) return <p>Loading Articles...</p>;
+    // Skeleton loader for loading state
+    const SkeletonLoader = () => (
+        <div className="animate-pulse">
+            {[...Array(6)].map((_, index) => (
+                <div key={index} className="mb-6">
+                    <div className="h-6 bg-gray-500 rounded-md w-3/4 mb-2"></div>
+                    <div className="h-4 bg-gray-400 rounded-md w-full mb-1"></div>
+                    <div className="h-4 bg-gray-300 rounded-md w-5/6"></div>
+                </div>
+            ))}
+        </div>
+    );
+
+    if (isLoading)
+        return (
+            <section className="max-w-8xl mx-auto p-3 flex flex-col gap-8 py-10 min-h-screen">
+                <SkeletonLoader />
+            </section>
+        );
+
     if (isError) return <p className="text-red-500">Failed to load articles.</p>;
 
     return (
         <section className="max-w-8xl mx-auto p-3 flex flex-col gap-8 py-10 min-h-screen">
             <div className="text-center px-4 md:px-2 lg:px-0">
                 <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold">
-                    NighteCoding&apos;s exciting{' '}
+                    NighteCoding&apos;s exciting{" "}
                     <span className="text-sky-600 dark:text-indigo-500">Articles</span>
                 </h2>
                 <p className="text-xl text-zinc-600 dark:text-slate-400 font-semibold mt-3">
@@ -92,7 +109,7 @@ const Articles = React.memo(() => {
             {data?.articles && data.articles.length > 0 && (
                 <div>
                     <div className="max-w-3xl mx-auto">
-                        <Suspense fallback={<p>Loading Articles Page...</p>}>
+                        <Suspense fallback={<SkeletonLoader />}>
                             {data.articles.map((article) => (
                                 <ArticlesLanding key={article._id} article={article} />
                             ))}
@@ -124,6 +141,6 @@ const Articles = React.memo(() => {
 });
 
 // Add displayName
-Articles.displayName = 'Articles Page';
+Articles.displayName = "Articles Page";
 
 export default Articles;

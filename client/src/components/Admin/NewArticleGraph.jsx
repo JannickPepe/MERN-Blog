@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { fetchArticleStats } from "../../api/fetchArticleCharts";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, Info } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const NewArticleChart = () => {
     const [timeRange, setTimeRange] = useState("24h"); // Default to Last 24 Hours
+    const [percentageChange, setPercentageChange] = useState({ articles: 0, likes: 0 }); // % change for articles and likes
 
     // Fetch article stats based on selected time range
     const { data: graphData = { articles: [] }, isLoading, isError } = useQuery({
@@ -17,19 +18,80 @@ const NewArticleChart = () => {
         keepPreviousData: true,
     });
 
-    const chartData = graphData.articles.map((point) => ({
-        date: point.date,
-        articles: point.count,
-        likes: point.likes || 0, // Ensure likes data is included, defaulting to 0 if not present
-    }));
+    // Memoized chart data to prevent unnecessary recalculations
+    const chartData = useMemo(() => {
+        return graphData.articles.map((point) => ({
+            date: point.date,
+            articles: point.count,
+            likes: point.likes || 0, // Ensure likes data is included, defaulting to 0 if not present
+        }));
+    }, [graphData]);
 
     // Calculate total articles and likes for the selected time range
-    const totalArticlesForTimeRange = graphData.articles.reduce((sum, article) => sum + article.count, 0);
-    const totalLikesForTimeRange = graphData.articles.reduce((sum, article) => sum + (article.likes || 0), 0);
+    const totalArticlesForTimeRange = useMemo(
+        () => graphData.articles.reduce((sum, article) => sum + article.count, 0),
+        [graphData]
+    );
+
+    const totalLikesForTimeRange = useMemo(
+        () => graphData.articles.reduce((sum, article) => sum + (article.likes || 0), 0),
+        [graphData]
+    );
+
+    // Fetch stats for the previous time range to calculate the percentage change
+    useEffect(() => {
+        const fetchPreviousStats = async () => {
+            const previousTimeRange = timeRange === "24h" ? "7d" : timeRange === "7d" ? "30d" : "30d";
+            const previousData = await fetchArticleStats(previousTimeRange);
+
+            const previousArticlesTotal = previousData.articles.reduce((sum, article) => sum + (article.count || 0), 0);
+            const previousLikesTotal = previousData.articles.reduce((sum, article) => sum + (article.likes || 0), 0);
+
+            const articlesChange = previousArticlesTotal
+                ? ((previousArticlesTotal - totalArticlesForTimeRange) / previousArticlesTotal) * 100
+                : totalArticlesForTimeRange > 0
+                ? 100
+                : 0;
+
+            const likesChange = previousLikesTotal
+                ? ((previousLikesTotal - totalLikesForTimeRange) / previousLikesTotal) * 100
+                : totalLikesForTimeRange > 0
+                ? 100
+                : 0;
+
+            setPercentageChange({ articles: articlesChange, likes: likesChange });
+        };
+
+        fetchPreviousStats();
+    }, [timeRange, totalArticlesForTimeRange, totalLikesForTimeRange]);
 
     // Dropdown handler
     const handleTimeRangeChange = (range) => {
         setTimeRange(range);
+    };
+
+    // Determine color for percentage indicator
+    const getColorForPercentage = (percentage) => {
+        if (percentage <= 33) return "text-red-500";
+        if (percentage <= 66) return "text-yellow-500";
+        return "text-green-500";
+    };
+
+    // Tooltip message based on percentage range
+    const getTooltipMessage = (percentage, type) => {
+        if (percentage <= 33) {
+            return type === "articles"
+                ? "How to use AI to get better"
+                : "Optimize your content strategy";
+        } else if (percentage <= 66) {
+            return type === "articles"
+                ? "How to make SEO and track analytics"
+                : "Enhance audience engagement";
+        } else {
+            return type === "articles"
+                ? "Well done, now feel free to share with people"
+                : "Keep up the great work!";
+        }
     };
 
     if (isLoading) {
@@ -72,7 +134,6 @@ const NewArticleChart = () => {
             </CardHeader>
 
             <CardContent>
-                {/* Bar Chart */}
                 <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={chartData}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -103,11 +164,38 @@ const NewArticleChart = () => {
                         Total Articles: {totalArticlesForTimeRange} | Total Likes: {totalLikesForTimeRange} within{" "}
                         {timeRange === "24h" ? "24 Hours" : timeRange === "7d" ? "7 Days" : "1 Month"}
                     </span>
-                    <TrendingUp className="h-4 w-4 text-green-500" />
                 </div>
                 <p className="text-gray-600 dark:text-gray-400">
                     Showing statistics for the selected time range: <strong>{timeRange}</strong>.
                 </p>
+                <div
+                    className={`flex items-center gap-2 font-medium leading-none ${getColorForPercentage(
+                        percentageChange.articles
+                    )}`}
+                >
+                    <TrendingUp className="h-4 w-4" />
+                    <span>{percentageChange.articles.toFixed(2)}% {percentageChange.articles > 0 ? "increase" : "decrease"} in articles</span>
+                    <div className="relative group">
+                        <Info className="h-4 w-4 text-gray-500 hover:text-gray-800" />
+                        <div className="absolute hidden group-hover:block bg-gray-700 text-white p-2 min-w-[140px] rounded shadow-lg text-xs">
+                            {getTooltipMessage(percentageChange.articles, "articles")}
+                        </div>
+                    </div>
+                </div>
+                <div
+                    className={`flex items-center gap-2 font-medium leading-none ${getColorForPercentage(
+                        percentageChange.likes
+                    )}`}
+                >
+                    <TrendingUp className="h-4 w-4" />
+                    <span>{percentageChange.likes.toFixed(2)}% {percentageChange.likes > 0 ? "increase" : "decrease"} in likes</span>
+                    <div className="relative group">
+                        <Info className="h-4 w-4 text-gray-500 hover:text-gray-800" />
+                        <div className="absolute hidden group-hover:block bg-gray-700 text-white p-2 min-w-[140px] rounded shadow-lg text-xs">
+                            {getTooltipMessage(percentageChange.likes, "likes")}
+                        </div>
+                    </div>
+                </div>
             </CardFooter>
         </Card>
     );
