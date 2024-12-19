@@ -4,6 +4,8 @@ import PrivateRoute from './components/PrivateRoute';
 import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute';
 import ScrollToTop from './components/ScrollToTop';
 import { NotificationProvider } from './components/NotificationContext';
+import Footer from './components/Footer';
+import Header from './components/Header';
 
 // Lazy load pages
 const Home = React.lazy(() => import('./pages/Home'));
@@ -20,23 +22,22 @@ const UpdateArticle = React.lazy(() => import('./pages/Articles/UpdateArticle'))
 const Articles = React.lazy(() => import('./pages/Articles/Articles'));
 const Search = React.lazy(() => import('./pages/Posts/Search'));
 const Contact = React.lazy(() => import('./pages/Contact/Contact'));
-const Header = React.lazy(() => import('./components/Header'));
-const Footer = React.lazy(() => import('./components/Footer'));
 
-// Preload Home component
+// Preload 
 Home.preload = () => import('./pages/Home');
 Search.preload = () => import('./pages/Posts/Search');
-Articles.preload = () => import('./pages/Articles/Articles')
+Projects.preload = () => import('./pages/Projects/Projects');
+Articles.preload = () => import('./pages/Articles/Articles');
+SignIn.preload = () => import('./pages/login/SignIn');
+SignUp.preload = () => import('./pages/login/SignUp');
 
 export default function App() {
   return (
     <NotificationProvider>
       <BrowserRouter>
         <ScrollToTop />
-        <Suspense fallback={<div>Loading Header...</div>}>
-          <Header />
-        </Suspense>
-        <Suspense fallback={<p>Loading...</p>}>
+        <Header />
+        <Suspense fallback={<>Loading...</>}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -61,9 +62,7 @@ export default function App() {
             <Route path="/post/:postSlug" element={<PostPage />} />
           </Routes>
         </Suspense>
-        <Suspense fallback={<div>Loading Footer...</div>}>
-          <Footer />
-        </Suspense>
+        <Footer />
       </BrowserRouter>
     </NotificationProvider>
   );

@@ -104,7 +104,6 @@ export default function UpdateArticle() {
 
       if (res.ok) {
         setPublishError(null);
-        // Show the notification globally
         showNotification("Article updated successfully!");
         // Immediately navigate
         navigate(`/dashboard?tab=articles`);

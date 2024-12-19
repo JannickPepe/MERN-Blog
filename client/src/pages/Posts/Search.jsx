@@ -1,7 +1,8 @@
 import { Select } from 'flowbite-react';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PostCard from '../../components/Posts/PostCard';
+import { NotificationContext } from '@/components/NotificationContext';
 
 
 export default function Search() {
@@ -17,8 +18,8 @@ export default function Search() {
   const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
+  const { showNotification } = useContext(NotificationContext);
   const location = useLocation();
-
   const navigate = useNavigate();
 
   //
@@ -82,6 +83,7 @@ export default function Search() {
     urlParams.set('sort', sidebarData.sort);
     urlParams.set('category', sidebarData.category);
     const searchQuery = urlParams.toString();
+    showNotification("Search Confirmed!");
     navigate(`/search?${searchQuery}`);
   };
 

@@ -2,6 +2,7 @@
 import { useRef } from "react";
 import { useScroll, useTransform, motion } from "framer-motion";
 import LandingCTA from "./LandingCTA";
+import { HeroWordWrap } from "./HeroWordWrap";
 
 const NewHero = () => {
     const targetRef = useRef(null);
@@ -36,14 +37,7 @@ const Copy = ({ scrollYProgress }) => {
             }}
             className="absolute px-8 w-full h-[92vh] z-20 flex flex-col items-center justify-center"
         >
-            <h1 className="text-stone-950 dark:text-zinc-300 text-5xl md:text-7xl font-bold text-center max-w-xl">
-                The NighteCoding Community!
-            </h1>
-            <p className="text-stone-600 dark:text-zinc-400 text-sm md:text-base text-center max-w-xl my-6">
-                A community for every person in tech and programming - no matter the skillset. <br/>
-                Newsletters and blogs will be available for all!
-            </p>
-    
+            <HeroWordWrap />
             <LandingCTA />
         </motion.div>
     );

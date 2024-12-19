@@ -2,12 +2,13 @@
 import { motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { signInFailure, signInStart, signInSuccess } from "../../redux/user/userSlice";
 import { Alert, Spinner } from "flowbite-react";
 import OAuth from "./OAuth";
 import nighteCodingLogo from '../../assets/logo/nighteCoding-logo.png';
+import { NotificationContext } from "../NotificationContext";
 
 
 export const SignInTemp = () => {
@@ -79,6 +80,7 @@ const Email = () => {
     const [formData, setFormData] = useState({});
     const { loading, error: errorMessage } = useSelector((state) => state.user);
     const dispatch = useDispatch();
+    const { showNotification } = useContext(NotificationContext);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -107,6 +109,7 @@ const Email = () => {
     
             if (res.ok) {
                 dispatch(signInSuccess(data));
+                showNotification("Login Confirmed!");
                 navigate('/');
             }
     

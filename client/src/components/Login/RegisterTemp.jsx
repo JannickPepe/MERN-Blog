@@ -2,10 +2,11 @@
 import { motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Alert, Spinner } from "flowbite-react";
 import OAuth from "./OAuth";
 import nighteCodingLogo from '../../assets/logo/nighteCoding-logo.png';
+import { NotificationContext } from "../NotificationContext";
 
 
 export const RegisterTemp = () => {
@@ -77,7 +78,7 @@ const Email = () => {
     const [formData, setFormData] = useState({});
     const [errorMessage, setErrorMessage] = useState(null);
     const [loading, setLoading] = useState(false);
-
+    const { showNotification } = useContext(NotificationContext);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -103,6 +104,7 @@ const Email = () => {
         }
         setLoading(false);
         if(res.ok) {
+            showNotification("User Made!");
             navigate('/sign-in');
         }
         } catch (error) {

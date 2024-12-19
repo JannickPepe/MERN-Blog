@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { fetchArticleStats } from "../../api/fetchArticleCharts";
 import { TrendingUp } from "lucide-react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
@@ -19,11 +19,13 @@ const NewArticleChart = () => {
 
     const chartData = graphData.articles.map((point) => ({
         date: point.date,
-        count: point.count,
+        articles: point.count,
+        likes: point.likes || 0, // Ensure likes data is included, defaulting to 0 if not present
     }));
 
-    // Calculate total articles for the selected time range
+    // Calculate total articles and likes for the selected time range
     const totalArticlesForTimeRange = graphData.articles.reduce((sum, article) => sum + article.count, 0);
+    const totalLikesForTimeRange = graphData.articles.reduce((sum, article) => sum + (article.likes || 0), 0);
 
     // Dropdown handler
     const handleTimeRangeChange = (range) => {
@@ -43,9 +45,9 @@ const NewArticleChart = () => {
             <CardHeader>
                 <div className="flex justify-between items-center">
                     <div>
-                        <CardTitle>Article Amount Statistics</CardTitle>
+                        <CardTitle>Article & Likes Statistics</CardTitle>
                         <CardDescription>
-                            Select a time range to view detailed statistics of articles created.
+                            Select a time range to view statistics of articles created and likes received.
                         </CardDescription>
                     </div>
                     <DropdownMenu>
@@ -68,7 +70,7 @@ const NewArticleChart = () => {
                     </DropdownMenu>
                 </div>
             </CardHeader>
-    
+
             <CardContent>
                 {/* Bar Chart */}
                 <ResponsiveContainer width="100%" height={300}>
@@ -82,21 +84,24 @@ const NewArticleChart = () => {
                         />
                         <YAxis allowDecimals={false} />
                         <Tooltip
-                            formatter={(value) => `${value} Articles`}
+                            formatter={(value, name) =>
+                                `${value} ${name === "articles" ? "Articles" : "Likes"}`
+                            }
                             labelFormatter={(label) =>
                                 `Date: ${new Date(label).toLocaleDateString()}`
                             }
                         />
-                        <Bar dataKey="count" fill="rgba(59, 130, 246, 1)" radius={[4, 4, 0, 0]} />
+                        <Bar dataKey="articles" fill="rgba(59, 130, 246, 1)" radius={[4, 4, 0, 0]} />
+                        <Bar dataKey="likes" fill="rgba(255, 99, 132, 1)" radius={[4, 4, 0, 0]} />
                     </BarChart>
                 </ResponsiveContainer>
             </CardContent>
-    
+
             <CardFooter className="flex flex-col items-start gap-2 text-sm">
                 <div className="flex gap-2 font-medium leading-none">
                     <span className="text-gray-700 dark:text-gray-300">
-                        Total Articles for {timeRange === "24h" ? "Last 24 Hours" : timeRange === "7d" ? "Last 7 Days" : "Last Month"}
-                        : {totalArticlesForTimeRange}
+                        Total Articles: {totalArticlesForTimeRange} | Total Likes: {totalLikesForTimeRange} within{" "}
+                        {timeRange === "24h" ? "24 Hours" : timeRange === "7d" ? "7 Days" : "1 Month"}
                     </span>
                     <TrendingUp className="h-4 w-4 text-green-500" />
                 </div>

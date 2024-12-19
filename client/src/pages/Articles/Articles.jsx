@@ -1,6 +1,7 @@
-import React, { Suspense, useCallback } from 'react';
+import React, { Suspense, useCallback, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchArticles } from '../../api/fetchArticles';
+
 
 // Lazy load the ArticlesLanding component
 const ArticlesLanding = React.lazy(() => import('../../components/Landing/Articles'));
@@ -48,6 +49,28 @@ const Articles = React.memo(() => {
         [] // `setCurrentPage` is a stable function, so no dependencies are needed
     );
 
+    // Safely calculate total pages with a fallback value
+    const totalPages = useMemo(() => {
+        if (!data?.totalArticles) return 1; // Default to 1 page if data is unavailable
+        return Math.ceil(data.totalArticles / articlesPerPage);
+    }, [data, articlesPerPage]);
+
+    const paginationButtons = useMemo(() => {
+        return [...Array(totalPages)].map((_, index) => (
+            <button
+                key={index}
+                onClick={() => handlePageChange(index + 1)}
+                className={`px-4 py-2 rounded-lg ${
+                    currentPage === index + 1
+                        ? 'bg-sky-600 text-gray-200'
+                        : 'bg-sky-600 text-gray-200 hover:bg-gray-700'
+                }`}
+            >
+                {index + 1}
+            </button>
+        ));
+    }, [currentPage, handlePageChange, totalPages]);
+
     if (isLoading) return <p>Loading Articles...</p>;
     if (isError) return <p className="text-red-500">Failed to load articles.</p>;
 
@@ -66,7 +89,7 @@ const Articles = React.memo(() => {
                 </p>
             </div>
 
-            {data.articles && data.articles.length > 0 && (
+            {data?.articles && data.articles.length > 0 && (
                 <div>
                     <div className="max-w-3xl mx-auto">
                         <Suspense fallback={<p>Loading Articles Page...</p>}>
@@ -85,24 +108,10 @@ const Articles = React.memo(() => {
                         >
                             Previous
                         </button>
-
-                        {[...Array(Math.ceil(data.totalArticles / articlesPerPage))].map((_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => handlePageChange(index + 1)}
-                                className={`px-4 py-2 rounded-lg ${
-                                    currentPage === index + 1
-                                        ? 'bg-sky-600 text-gray-200'
-                                        : 'bg-sky-600 text-gray-200 hover:bg-gray-700'
-                                }`}
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
-
+                        {paginationButtons}
                         <button
                             onClick={handleNextPage}
-                            disabled={currentPage === Math.ceil(data.totalArticles / articlesPerPage)}
+                            disabled={currentPage === totalPages}
                             className="px-4 py-2 bg-gray-200 text-gray-700 hover:text-gray-200 rounded-lg hover:bg-gray-700 disabled:opacity-50"
                         >
                             Next

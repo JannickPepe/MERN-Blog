@@ -5,9 +5,10 @@ import { FaMoon, FaSun } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleTheme } from '../redux/theme/themeSlice';
 import { signoutSuccess } from '../redux/user/userSlice';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import nighteCodingLogo from '../assets/logo/nighteCoding-logo.png';
 import NewLogin from './Login/NewLogin';
+import { NotificationContext } from './NotificationContext';
 
 
 export default function Header() {
@@ -17,7 +18,8 @@ export default function Header() {
   const navigate = useNavigate();
   // for the light and dark mode
   const dispatch = useDispatch();
-
+  // For notification 
+  const { showNotification } = useContext(NotificationContext);
   const { currentUser } = useSelector((state) => state.user);
   // for the LnD mode
   const { theme } = useSelector((state) => state.theme);
@@ -56,6 +58,7 @@ export default function Header() {
     const urlParams = new URLSearchParams(location.search);
     urlParams.set('searchTerm', searchTerm);
     const searchQuery = urlParams.toString();
+    showNotification("Redirected to Search Page");
     navigate(`/search?${searchQuery}`);
   };
 
