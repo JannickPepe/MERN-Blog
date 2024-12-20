@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const ArticleLineChart = () => {
-    const [timeRange, setTimeRange] = useState("24h"); // Default to Last 24 Hours
+    const [timeRange, setTimeRange] = useState("7d"); // Default to Last 24 Hours
     const [percentageChange, setPercentageChange] = useState({ articles: 0, likes: 0 }); // % changes for articles and likes
 
     // Fetch article stats based on selected time range
@@ -47,13 +47,13 @@ const ArticleLineChart = () => {
             const previousLikesTotal = previousData.articles.reduce((sum, article) => sum + (article.likes || 0), 0);
 
             const articlesChange = previousArticlesTotal
-                ? ((previousArticlesTotal - totalArticlesForTimeRange) / previousArticlesTotal) * 100
+                ? ((totalArticlesForTimeRange - previousArticlesTotal) / previousArticlesTotal) * 100
                 : totalArticlesForTimeRange > 0
                 ? 100
                 : 0;
 
             const likesChange = previousLikesTotal
-                ? ((previousLikesTotal - totalLikesForTimeRange) / previousLikesTotal) * 100
+                ? ((totalLikesForTimeRange - previousLikesTotal) / previousLikesTotal) * 100
                 : totalLikesForTimeRange > 0
                 ? 100
                 : 0;
@@ -101,10 +101,10 @@ const ArticleLineChart = () => {
     return (
         <Card className="w-full max-w-4xl mx-auto p-4">
             <CardHeader>
-                <div className="flex justify-between items-center">
+                <div className="md:flex justify-between items-center">
                     <div>
-                        <CardTitle>Articles & Likes Statistics</CardTitle>
-                        <CardDescription>
+                        <CardTitle className="text-lg">Articles & Likes Statistics</CardTitle>
+                        <CardDescription className="max-w-xs mb-4 md:mb-0">
                             Select a time range to view statistics of articles created and likes received.
                         </CardDescription>
                     </div>
@@ -115,8 +115,8 @@ const ArticleLineChart = () => {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                            <DropdownMenuItem onClick={() => handleTimeRangeChange("24h")}>Last 24 Hours</DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleTimeRangeChange("7d")}>Last 7 Days</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleTimeRangeChange("24h")}>Last 24 Hours</DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleTimeRangeChange("30d")}>Last Month</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -124,7 +124,7 @@ const ArticleLineChart = () => {
             </CardHeader>
 
             <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={300} className="dark:text-slate-800">
                     <LineChart data={chartData}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} />
                         <XAxis
@@ -132,6 +132,7 @@ const ArticleLineChart = () => {
                             tickFormatter={(value) => new Date(value).toLocaleDateString()}
                             tickLine={false}
                             axisLine={false}
+                            className="text-red-400"
                         />
                         <YAxis />
                         <Tooltip formatter={(value, name) => `${value} ${name}`} />
@@ -165,7 +166,7 @@ const ArticleLineChart = () => {
                 </p>
                 <div className={`flex items-center gap-2 font-medium leading-none ${getColorForPercentage(percentageChange.articles)}`}>
                     <TrendingUp className="h-4 w-4" />
-                    <span>{percentageChange.articles.toFixed(2)}% increase in articles</span>
+                    <span>{percentageChange.articles.toFixed(2)}% {percentageChange.articles > 0 ? "increase" : "decrease"} in articles</span>
                     <div className="relative group">
                         <Info className="h-4 w-4 text-gray-500 hover:text-gray-800" />
                         <div className="absolute hidden group-hover:block bg-gray-700 text-white p-2 min-w-[140px] rounded shadow-lg text-xs">
@@ -175,7 +176,7 @@ const ArticleLineChart = () => {
                 </div>
                 <div className={`flex items-center gap-2 font-medium leading-none ${getColorForPercentage(percentageChange.likes)}`}>
                     <TrendingUp className="h-4 w-4" />
-                    <span>{percentageChange.likes.toFixed(2)}% increase in likes</span>
+                    <span>{percentageChange.likes.toFixed(2)}% {percentageChange.likes > 0 ? "increase" : "decrease"} in likes</span>
                     <div className="relative group">
                         <Info className="h-4 w-4 text-gray-500 hover:text-gray-800" />
                         <div className="absolute hidden group-hover:block bg-gray-700 text-white p-2 min-w-[140px] rounded shadow-lg text-xs">

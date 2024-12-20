@@ -36,16 +36,13 @@ export const getarticles = async (req, res, next) => {
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 9;
-    const order = req.query.order === 'desc' ? -1 : 1; 
-    const sortBy = req.query.sortBy || 'rank'; // Default to rank if not provided
+    const order = req.query.order === 'desc' ? -1 : 1;
+    const sortBy = req.query.sortBy || 'rank';
 
-    const articles = await Article.find({
-      ...(req.query.userId && { userId: req.query.userId }),
-      ...(req.query.articleId && { _id: req.query.articleId }),
-    })
-    .sort({ [sortBy]: order })
-    .skip(startIndex)
-    .limit(limit);
+    const articles = await Article.find()
+      .sort({ [sortBy]: order })
+      .skip(startIndex)
+      .limit(limit);
 
     const totalArticles = await Article.countDocuments();
 
@@ -60,16 +57,37 @@ export const getarticles = async (req, res, next) => {
       createdAt: { $gte: oneMonthAgo },
     });
 
+    const articlesGroupedByDay = await Article.aggregate([
+      {
+        $project: {
+          createdAt: 1,
+        },
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { count: -1 } },
+    ]);
+
+    const mostCreatedDay =
+      articlesGroupedByDay.length > 0
+        ? new Date(articlesGroupedByDay[0]._id).toDateString()
+        : 'N/A';
+
     res.status(200).json({
       articles,
       totalArticles,
       lastMonthArticles,
+      mostCreatedDay,
     });
-
   } catch (error) {
     next(error);
   }
 };
+
 
 //
 export const deletearticle = async (req, res, next) => {
@@ -120,25 +138,43 @@ export const getArticleLikesStats = async (req, res, next) => {
     const now = new Date();
     const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
 
-    // Aggregate the total likes and likes from the last month
     const totalLikes = await Article.aggregate([
-      { $group: { _id: null, totalLikes: { $sum: "$likes" } } },
+      { $group: { _id: null, totalLikes: { $sum: '$likes' } } },
     ]);
 
     const lastMonthArticlesLikes = await Article.aggregate([
       { $match: { updatedAt: { $gte: oneMonthAgo } } },
-      { $group: { _id: null, totalLikes: { $sum: "$likes" } } },
+      { $group: { _id: null, totalLikes: { $sum: '$likes' } } },
     ]);
+
+    const likesGroupedByDay = await Article.aggregate([
+      { $project: { updatedAt: 1, likes: 1 } },
+      { $match: { updatedAt: { $gte: oneMonthAgo } } },
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$updatedAt' } },
+          totalLikes: { $sum: '$likes' },
+        },
+      },
+      { $sort: { totalLikes: -1 } },
+    ]);
+
+    const mostLikedDay =
+      likesGroupedByDay.length > 0
+        ? new Date(likesGroupedByDay[0]._id).toDateString()
+        : 'N/A';
 
     res.status(200).json({
       totalLikes: totalLikes[0]?.totalLikes || 0,
       lastMonthArticlesLikes: lastMonthArticlesLikes[0]?.totalLikes || 0,
+      mostLikedDay,
     });
   } catch (error) {
-    console.error("Error in getArticleLikesStats:", error);
     next(error);
   }
 };
+
+
 
 //
 export const updateArticleRanks = async (req, res) => {

@@ -96,9 +96,7 @@ export const signout = (req, res, next) => {
   }
 };
 
-// getUsers
 export const getUsers = async (req, res, next) => {
-
   if (!req.user.isAdmin) {
     return next(errorHandler(403, 'You are not allowed to see all users'));
   }
@@ -121,22 +119,37 @@ export const getUsers = async (req, res, next) => {
     const totalUsers = await User.countDocuments();
 
     const now = new Date();
-
     const oneMonthAgo = new Date(
       now.getFullYear(),
       now.getMonth() - 1,
       now.getDate()
     );
+
     const lastMonthUsers = await User.countDocuments({
       createdAt: { $gte: oneMonthAgo },
     });
+
+    // Calculate the day with the most user creations
+    const allUsers = await User.find({}, { createdAt: 1 }); // Fetch all user creation dates
+    const userCreationCounts = allUsers.reduce((acc, user) => {
+      const date = new Date(user.createdAt).toDateString(); // Group by day
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    }, {});
+
+    const mostCreatedDayEntry = Object.entries(userCreationCounts).reduce(
+      (max, entry) => (entry[1] > max[1] ? entry : max),
+      ['', 0] // Default to empty day and 0 count
+    );
+
+    const mostCreatedDay = mostCreatedDayEntry[0]; // Extract the date
 
     res.status(200).json({
       users: usersWithoutPassword,
       totalUsers,
       lastMonthUsers,
+      mostCreatedDay, // Include the most created day
     });
-
   } catch (error) {
     next(error);
   }

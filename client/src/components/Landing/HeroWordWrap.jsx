@@ -26,7 +26,7 @@ export const HeroWordWrap = () => {
                     </svg>
                 </span>
             </h1>
-            <p className="text-stone-600 dark:text-zinc-400 text-sm md:text-base text-center max-w-xl my-6">
+            <p className="text-stone-600 dark:text-zinc-400 text-sm md:text-base text-center max-w-xl mx-auto my-6">
                 A <span className="font-semibold underline">community</span> for every person in tech and programming - <span className="font-semibold underline">no matter</span> the skillset. <br/>
                 Newsletters and blogs will be available for all!
             </p>

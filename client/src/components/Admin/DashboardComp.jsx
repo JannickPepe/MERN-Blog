@@ -1,161 +1,79 @@
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import { HiAnnotation, HiArrowNarrowUp, HiDocumentText, HiOutlineUserGroup, } from 'react-icons/hi';
 import { Button, Table } from 'flowbite-react';
 import { Link } from 'react-router-dom';
-import { BiLike } from "react-icons/bi";
-import { GrArticle } from "react-icons/gr";
+import { BiLike } from 'react-icons/bi';
+import { GrArticle } from 'react-icons/gr';
+import { useUsersData, usePostsData, useArticlesLikesData, useArticlesData, useCommentsData, } from '../../api/dashboardAPI';
 
-// Dynamically import ArticleGraph using React.lazy
 const NewArticleChart = React.lazy(() => import('./NewArticleGraph'));
 const ArticleLineChart = React.lazy(() => import('./ArticleLineChart'));
 
-
 export default function DashboardComp() {
-  const [users, setUsers] = useState([]);
-  const [comments, setComments] = useState([]);
-  const [posts, setPosts] = useState([]);
-  const [articles, setArticles] = useState([]);
-  const [totalUsers, setTotalUsers] = useState(0);
-  const [totalPosts, setTotalPosts] = useState(0);
-  const [totalComments, setTotalComments] = useState(0);
-  const [totalArticles, setTotalArticles] = useState(0);
-  const [totalArticleLikes, setTotalArticlesLikes] = useState(0);
-  const [lastMonthArticles, setLastMonthArticles] = useState(0);
-  const [lastMonthUsers, setLastMonthUsers] = useState(0);
-  const [lastMonthPosts, setLastMonthPosts] = useState(0);
-  const [lastMonthComments, setLastMonthComments] = useState(0);
-  const [lastMonthArticlesLikes , setLastMonthArticlesLikes] = useState(0);
-
   const { currentUser } = useSelector((state) => state.user);
 
-  
-  useEffect(() => {
-    //
-    const fetchUsers = async () => {
-      try {
-        const res = await fetch('/api/user/getusers?limit=5');
-        const data = await res.json();
-        if (res.ok) {
-          setUsers(data.users);
-          setTotalUsers(data.totalUsers);
-          setLastMonthUsers(data.lastMonthUsers);
-        }
+  // React Query Hooks
+  const { data: userData } = useUsersData();
+  const { data: postData } = usePostsData();
+  const { data: articlesLikesData } = useArticlesLikesData(currentUser);
+  const { data: articleData } = useArticlesData();
+  const { data: commentData } = useCommentsData();
 
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
+  // Safely access data with optional chaining
+  const users = userData?.users || [];
+  const totalUsers = userData?.totalUsers || 0;
+  const lastMonthUsers = userData?.lastMonthUsers || 0;
+  const mostCreatedUsersDay = userData?.mostCreatedDay || 'N/A';
 
-    //
-    const fetchPosts = async () => {
-      try {
-        const res = await fetch('/api/post/getposts?limit=5');
-        const data = await res.json();
-        if (res.ok) {
-          setPosts(data.posts);
-          setTotalPosts(data.totalPosts);
-          setLastMonthPosts(data.lastMonthPosts);
-        }
+  const posts = postData?.posts || [];
+  const totalPosts = postData?.totalPosts || 0;
+  const lastMonthPosts = postData?.lastMonthPosts || 0;
+  const mostCreatedPostsDay = postData?.mostCreatedDay || 'N/A';
 
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-  
-    //
-    const fetchArticlesLikes = async () => {
-      try {
-          const res = await fetch('/api/article/articlestats', {
-            headers: {
-              'Authorization': `Bearer ${currentUser.token}`,
-            },
-          });
-  
-          const data = await res.json();
-          if (res.ok) {
-            setTotalArticlesLikes(data.totalLikes);
-            setLastMonthArticlesLikes(data.lastMonthArticlesLikes);
-          }
-        } catch (error) {
-          console.log("Error fetching article likes stats:", error.message);
-        }
-    };
-  
-    //
-    const fetchArticles = async () => {
-      try {
-        const res = await fetch('/api/article/getarticles?limit=5');
-        const data = await res.json();
-        if (res.ok) {
-          setArticles(data.articles);
-          setTotalArticles(data.totalArticles);
-          setLastMonthArticles(data.lastMonthArticles);
-        }
+  const totalArticleLikes = articlesLikesData?.totalLikes || 0;
+  const lastMonthArticlesLikes = articlesLikesData?.lastMonthArticlesLikes || 0;
+  const mostLikedDay = articlesLikesData?.mostLikedDay || 'N/A';
 
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-  
-  
-    //
-    const fetchComments = async () => {
-      try {
-        const res = await fetch('/api/comment/getcomments?limit=5');
-        const data = await res.json();
-        if (res.ok) {
-          setComments(data.comments);
-          setTotalComments(data.totalComments);
-          setLastMonthComments(data.lastMonthComments);
-        }
-        
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
+  const articles = articleData?.articles || [];
+  const totalArticles = articleData?.totalArticles || 0;
+  const lastMonthArticles = articleData?.lastMonthArticles || 0;
+  const mostCreatedArticlesDay = articleData?.mostCreatedDay || 'N/A';
 
-    if (currentUser.isAdmin) {
-      fetchUsers();
-      fetchPosts();
-      fetchArticles();
-      fetchComments();
-      fetchArticlesLikes();
-    }
-  }, [currentUser]);
-  
+  const comments = commentData?.comments || [];
+  const totalComments = commentData?.totalComments || 0;
+  const lastMonthComments = commentData?.lastMonthComments || 0;
+  const mostCommentedDay = commentData?.mostCommentedDay || 'N/A';
 
   
   return (
     <div className='p-3 md:mx-auto'>
-      <section className='flex-wrap flex gap-4 justify-center py-4'>
-        <div className='flex flex-col p-3 dark:bg-slate-800 gap-4 rounded-md shadow-md'>
-          <div className='flex justify-between gap-6'>
-            <div className=''>
-              <h3 className='text-gray-500 text-md uppercase'>
-                Total Users
-              </h3>
-              <p className='text-2xl'>{totalUsers}</p>
+
+      <section className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 my-6 md:px-2 gap-4 mx-auto'>
+        {/*Stats Box for Users Created */}
+        <div className="flex flex-col p-3 bg-slate-200 dark:bg-slate-800 gap-4 rounded-md shadow-md">
+          <div className="flex justify-between gap-3">
+            <div>
+              <h3 className="text-gray-500 dark:text-slate-500 text-md uppercase font-semibold">Total Users</h3>
+              <p className="text-2xl">{totalUsers}</p>
             </div>
-            <HiOutlineUserGroup className='text-teal-600 rounded-full text-5xl p-3 shadow-lg' />
+            <HiOutlineUserGroup className="text-teal-600 rounded-full text-5xl p-3 shadow-lg" />
           </div>
-          <div className='flex  gap-2 text-sm'>
-            <span className='text-green-500 flex items-center'>
+          <div className="flex gap-2 text-sm">
+            <span className="text-green-500 flex items-center">
               <HiArrowNarrowUp />
               {lastMonthUsers}
             </span>
-            <div className='text-gray-500'>
-              Last month
-            </div>
+            <p className="text-gray-500">Last month</p>
           </div>
+          <p className="text-sm text-slate-500 dark:text-slate-400 lg:-mt-2">Most created on: <span className='underline'>{mostCreatedUsersDay}</span></p>
         </div>
         
-        <div className='flex flex-col p-3 dark:bg-slate-800 gap-4 rounded-md shadow-md'>
-          <div className='flex justify-between gap-6'>
-            <div className=''>
-              <h3 className='text-gray-500 text-md uppercase'>
-                Total Comments
-              </h3>
+        {/*Stats Box for Comments Created */}
+        <div className='flex flex-col p-3 bg-slate-200 dark:bg-slate-800 gap-4 rounded-md shadow-md'>
+          <div className='flex justify-between gap-3'>
+            <div>
+              <h3 className='text-gray-500 dark:text-slate-500 text-md uppercase font-semibold'>Total Comments</h3>
               <p className='text-2xl'>{totalComments}</p>
             </div>
             <HiAnnotation className='text-teal-600 rounded-full text-5xl p-3 shadow-lg' />
@@ -165,14 +83,16 @@ export default function DashboardComp() {
               <HiArrowNarrowUp />
               {lastMonthComments}
             </span>
-            <div className='text-gray-500'>Last month</div>
+            <p className='text-gray-500'>Last month</p>
           </div>
+          <p className="text-sm text-slate-500 dark:text-slate-400 lg:-mt-2">Most created on: <span className='underline'>{mostCommentedDay}</span></p>
         </div>
 
-        <div className='flex flex-col p-3 dark:bg-slate-800 gap-4 rounded-md shadow-md'>
-          <div className='flex justify-between gap-6'>
+        {/*Stats Box for Posts Created */}
+        <div className='flex flex-col p-3 bg-slate-200 dark:bg-slate-800 gap-4 rounded-md shadow-md'>
+          <div className='flex justify-between gap-3'>
             <div className=''>
-              <h3 className='text-gray-500 text-md uppercase'>Total Posts</h3>
+              <h3 className='text-gray-500 dark:text-slate-500 text-md uppercase font-semibold'>Total Posts</h3>
               <p className='text-2xl'>{totalPosts}</p>
             </div>
             <HiDocumentText className='text-teal-600 rounded-full text-5xl p-3 shadow-lg' />
@@ -182,14 +102,16 @@ export default function DashboardComp() {
               <HiArrowNarrowUp />
               {lastMonthPosts}
             </span>
-            <div className='text-gray-500'>Last month</div>
+            <p className='text-gray-500'>Last month</p>
           </div>
+          <p className="text-sm text-slate-500 dark:text-slate-400 lg:-mt-2">Most created on: <span className='underline'>{mostCreatedPostsDay}</span></p>
         </div>
 
-        <div className='flex flex-col p-3 dark:bg-slate-800 gap-4 rounded-md shadow-md'>
-          <div className='flex justify-between gap-6'>
+        {/*Stats Box for Article Created */}
+        <div className='flex flex-col p-3 bg-slate-200 dark:bg-slate-800 gap-4 rounded-md shadow-md'>
+          <div className='flex justify-between gap-3'>
             <div className=''>
-              <h3 className='text-gray-500 text-md uppercase'>Total Articles</h3>
+              <h3 className='text-gray-500 dark:text-slate-500 text-md uppercase font-semibold'>Total Articles</h3>
               <p className='text-2xl'>{totalArticles}</p>
             </div>
             <GrArticle className='text-teal-600 rounded-full text-5xl p-3 shadow-lg' />
@@ -199,15 +121,16 @@ export default function DashboardComp() {
               <HiArrowNarrowUp />
               {lastMonthArticles}
             </span>
-            <div className='text-gray-500'>Last month</div>
+            <p className='text-gray-500'>Last month</p>
           </div>
+          <p className="text-sm text-slate-500 dark:text-slate-400 lg:-mt-2">Most created on: <span className='underline'>{mostCreatedArticlesDay}</span></p>
         </div>
 
-        {/* Add New Stats Box for Article Likes */}
-        <div className='flex flex-col p-3 dark:bg-slate-800 gap-4 rounded-md shadow-md'>
-          <div className='flex justify-between gap-6'>
+        {/*Stats Box for Article Likes */}
+        <div className='flex flex-col p-3 bg-slate-200 dark:bg-slate-800 gap-4 rounded-md shadow-md'>
+          <div className='flex justify-between gap-3'>
             <div className=''>
-              <h3 className='text-gray-500 text-md uppercase'>Total Article Likes</h3>
+              <h3 className='text-gray-500 dark:text-slate-500 text-md uppercase font-semibold'>Total Article Likes</h3>
               <p className='text-2xl'>{totalArticleLikes}</p>
             </div>
             <BiLike className='text-teal-600 rounded-full text-5xl p-3 shadow-lg' />
@@ -217,27 +140,28 @@ export default function DashboardComp() {
               <HiArrowNarrowUp />
               {lastMonthArticlesLikes}
             </span>
-            <div className='text-gray-500'>Last month</div>
+            <p className='text-gray-500'>Last month</p>
           </div>
+          <p className="text-sm text-slate-500 dark:text-slate-400 lg:-mt-2">Most liked on: <span className='underline'>{mostLikedDay}</span></p>
         </div>
-
       </section>
 
-      <section className='flex flex-wrap gap-4 py-3 mx-auto justify-center'>
+      <section className='flex flex-wrap gap-4 py-3 mx-auto justify-center md:px-2'>
         <div className='flex flex-col w-full shadow-md p-2 rounded-md dark:bg-gray-800'>
-
           {/* Add a Suspense fallback for lazy-loaded components */}
-          <div className='flex justify-center items-center gap-8 max-w-7xl mx-auto py-8 bg-zinc-300 px-6 rounded-md'>
-            <Suspense fallback={<p>Loading graph...</p>}>
-              <NewArticleChart />
-            </Suspense>
-            <Suspense fallback={<p>Loading graph...</p>}>
-              <ArticleLineChart />
-            </Suspense>
-          </div>
+          <div className='md:flex justify-center items-center gap-4 md:gap-8 bg-slate-200 dark:bg-inherit w-full mx-auto md:py-8 md:px-6 rounded-md'>
+              <Suspense fallback={<p>Loading graph...</p>}>
+                <NewArticleChart />
+              </Suspense>
+              <Suspense fallback={<p>Loading graph...</p>}>
+                <ArticleLineChart />
+              </Suspense>
+            </div>
+        </div>
 
-          <div className='flex justify-between  p-3 text-sm font-semibold'>
-            <h1 className='text-center p-2'>Recent users</h1>
+        <div className='flex flex-col w-full shadow-md p-2 rounded-md dark:bg-gray-800 my-8'>
+          <div className='flex justify-between bg-slate-200 dark:bg-inherit p-3 text-sm font-semibold'>
+            <h1 className='text-lg font-semibold p-2'>Recent users</h1>
             <Button outline gradientDuoTone='purpleToPink'>
               <Link to={'/dashboard?tab=users'}>See all</Link>
             </Button>
@@ -266,9 +190,9 @@ export default function DashboardComp() {
           </Table>
         </div>
 
-        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800 py-8 bg-zinc-300 px-6'>
+        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800 py-4 bg-zinc-300 px-6'>
           <div className='flex justify-between  p-3 text-sm font-semibold'>
-            <h1 className='text-center p-2'>Recent comments</h1>
+            <h1 className='text-lg font-semibold py-2'>Recent comments</h1>
             <Button outline gradientDuoTone='purpleToPink'>
               <Link to={'/dashboard?tab=comments'}>See all</Link>
             </Button>
@@ -293,9 +217,9 @@ export default function DashboardComp() {
           </Table>
         </div>
 
-        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800 py-8 bg-zinc-300 px-6'>
+        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800 py-4 bg-zinc-300 md:px-6 overflow-x-auto'>
           <div className='flex justify-between p-3 text-sm font-semibold'>
-            <h1 className='text-center p-2'>Recent posts</h1>
+            <h1 className='text-lg font-semibold py-2'>Recent posts</h1>
             <Button outline gradientDuoTone='purpleToPink'>
               <Link to={'/dashboard?tab=posts'}>See all</Link>
             </Button>
@@ -326,9 +250,9 @@ export default function DashboardComp() {
           </Table>
         </div>
 
-        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800'>
+        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800 py-4 bg-zinc-300 md:px-6 overflow-x-auto'>
           <div className='flex justify-between  p-3 text-sm font-semibold'>
-            <h1 className='text-center p-2'>Recent articles</h1>
+            <h1 className='p-2 text-lg font-semibold'>Recent articles</h1>
             <Button outline gradientDuoTone='purpleToPink'>
               <Link to={'/dashboard?tab=articles'}>See all</Link>
             </Button>

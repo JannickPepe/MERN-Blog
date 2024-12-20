@@ -73,10 +73,32 @@ export const getposts = async (req, res, next) => {
       createdAt: { $gte: oneMonthAgo },
     });
 
+    const postsGroupedByDay = await Post.aggregate([
+      {
+        $project: {
+          createdAt: 1,
+        },
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { count: -1 } },
+    ]);
+
+    const mostCreatedDay =
+      postsGroupedByDay.length > 0
+        ? new Date(postsGroupedByDay[0]._id).toDateString()
+        : 'N/A';
+
+
     res.status(200).json({
       posts,
       totalPosts,
       lastMonthPosts,
+      mostCreatedDay,
     });
 
   } catch (error) {
