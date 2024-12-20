@@ -76,12 +76,52 @@ export const getarticles = async (req, res, next) => {
       articlesGroupedByDay.length > 0
         ? new Date(articlesGroupedByDay[0]._id).toDateString()
         : 'N/A';
+        
+    // Find the article(s) with the most likes
+    const articlesWithMostLikes = await Article.aggregate([
+      {
+        $group: {
+          _id: '$_id', // Group by article ID
+          title: { $first: '$title' }, // Retain the title
+          likes: { $first: '$likes' }, // Retain the likes
+        },
+      },
+      { $sort: { likes: -1 } }, // Sort by likes in descending order
+    ]);
+
+    const maxLikes =
+      articlesWithMostLikes.length > 0 ? articlesWithMostLikes[0].likes : 0;
+
+    const mostLikedArticles = articlesWithMostLikes
+      .filter((article) => article.likes === maxLikes)
+      .map((article) => article.title);
+
+    // Find the article(s) with the least likes
+    const articlesWithLeastLikes = await Article.aggregate([
+      {
+        $group: {
+          _id: '$_id', // Group by article ID
+          title: { $first: '$title' }, // Retain the title
+          likes: { $first: '$likes' }, // Retain the likes
+        },
+      },
+      { $sort: { likes: 1 } }, // Sort by likes in ascending order
+    ]);
+
+    const minLikes =
+      articlesWithLeastLikes.length > 0 ? articlesWithLeastLikes[0].likes : 0;
+
+    const leastLikedArticles = articlesWithLeastLikes
+      .filter((article) => article.likes === minLikes)
+      .map((article) => article.title);
 
     res.status(200).json({
       articles,
       totalArticles,
       lastMonthArticles,
       mostCreatedDay,
+      mostLikedArticles,
+      leastLikedArticles,
     });
   } catch (error) {
     next(error);

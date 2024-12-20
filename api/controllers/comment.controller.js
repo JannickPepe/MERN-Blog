@@ -117,13 +117,16 @@ export const getcomments = async (req, res, next) => {
     const limit = parseInt(req.query.limit) || 9;
     const sortDirection = req.query.sort === 'desc' ? -1 : 1;
 
+    // Fetch paginated comments
     const comments = await Comment.find()
       .sort({ createdAt: sortDirection })
       .skip(startIndex)
       .limit(limit);
 
+    // Total number of comments
     const totalComments = await Comment.countDocuments();
 
+    // Comments in the last month
     const now = new Date();
     const oneMonthAgo = new Date(
       now.getFullYear(),
@@ -157,11 +160,33 @@ export const getcomments = async (req, res, next) => {
         ? new Date(commentsGroupedByDay[0]._id).toDateString()
         : 'N/A';
 
+    // Find the comment(s) with the most likes
+    const commentsWithMostLikes = await Comment.aggregate([
+      {
+        $group: {
+          _id: '$_id', // Group by comment ID
+          content: { $first: '$content' }, // Retain the content
+          numberOfLikes: { $first: '$numberOfLikes' }, // Retain the number of likes
+        },
+      },
+      { $sort: { numberOfLikes: -1 } }, // Sort by number of likes
+    ]);
+
+    // Determine the maximum number of likes
+    const maxLikes =
+      commentsWithMostLikes.length > 0 ? commentsWithMostLikes[0].numberOfLikes : 0;
+
+    // Filter to include only comments with the maximum number of likes
+    const mostLikedComments = commentsWithMostLikes.filter(
+      (comment) => comment.numberOfLikes === maxLikes
+    );
+
     res.status(200).json({
       comments,
       totalComments,
       lastMonthComments,
       mostCommentedDay,
+      mostLikedComments, // Include comments with the most likes
     });
   } catch (error) {
     next(error);

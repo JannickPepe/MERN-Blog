@@ -6,6 +6,9 @@ import { Link } from 'react-router-dom';
 import { BiLike } from 'react-icons/bi';
 import { GrArticle } from 'react-icons/gr';
 import { useUsersData, usePostsData, useArticlesLikesData, useArticlesData, useCommentsData, } from '../../api/dashboardAPI';
+import MostData from './TotalCommentsFull';
+import MostDataPosts from './TotalPostsFull';
+import MostDataArticles from './TotalArticlesFull';
 
 const NewArticleChart = React.lazy(() => import('./NewArticleGraph'));
 const ArticleLineChart = React.lazy(() => import('./ArticleLineChart'));
@@ -30,10 +33,14 @@ export default function DashboardComp() {
   const totalPosts = postData?.totalPosts || 0;
   const lastMonthPosts = postData?.lastMonthPosts || 0;
   const mostCreatedPostsDay = postData?.mostCreatedDay || 'N/A';
+  const mostUsedCategories = postData?.mostUsedCategories || [];
+  const leastUsedCategories = postData?.leastUsedCategories || [];
 
   const totalArticleLikes = articlesLikesData?.totalLikes || 0;
   const lastMonthArticlesLikes = articlesLikesData?.lastMonthArticlesLikes || 0;
   const mostLikedDay = articlesLikesData?.mostLikedDay || 'N/A';
+  const mostLikedArticles = articleData?.mostLikedArticles || [];
+  const leastLikedArticles = articleData?.leastLikedArticles || [];
 
   const articles = articleData?.articles || [];
   const totalArticles = articleData?.totalArticles || 0;
@@ -44,7 +51,8 @@ export default function DashboardComp() {
   const totalComments = commentData?.totalComments || 0;
   const lastMonthComments = commentData?.lastMonthComments || 0;
   const mostCommentedDay = commentData?.mostCommentedDay || 'N/A';
-
+  const mostCommentedPostTitle = postData?.mostCommentedPostTitle || 'N/A';
+  const mostLikedComments = commentData?.mostLikedComments || [];
   
   return (
     <div className='p-3 md:mx-auto'>
@@ -85,7 +93,17 @@ export default function DashboardComp() {
             </span>
             <p className='text-gray-500'>Last month</p>
           </div>
-          <p className="text-sm text-slate-500 dark:text-slate-400 lg:-mt-2">Most created on: <span className='underline'>{mostCommentedDay}</span></p>
+
+          <p className="text-sm text-slate-500 dark:text-slate-400 lg:-mt-2">
+            Most created on: <span className='underline'>{mostCommentedDay}</span>
+          </p>
+          <div className='relative'>
+            <MostData
+              mostCommentedPostTitle={mostCommentedPostTitle}
+              mostUsedCategories={mostUsedCategories}
+              mostLikedComments={mostLikedComments}
+            />
+          </div>
         </div>
 
         {/*Stats Box for Posts Created */}
@@ -104,7 +122,16 @@ export default function DashboardComp() {
             </span>
             <p className='text-gray-500'>Last month</p>
           </div>
-          <p className="text-sm text-slate-500 dark:text-slate-400 lg:-mt-2">Most created on: <span className='underline'>{mostCreatedPostsDay}</span></p>
+
+          <p className="text-sm text-slate-500 dark:text-slate-400 lg:-mt-2">
+            Most created on: <span className='underline'>{mostCreatedPostsDay}</span>
+          </p>
+          <div className='relative'>
+            <MostDataPosts
+              mostUsedCategories={mostUsedCategories}
+              leastUsedCategories={leastUsedCategories}
+            />
+          </div>
         </div>
 
         {/*Stats Box for Article Created */}
@@ -143,6 +170,10 @@ export default function DashboardComp() {
             <p className='text-gray-500'>Last month</p>
           </div>
           <p className="text-sm text-slate-500 dark:text-slate-400 lg:-mt-2">Most liked on: <span className='underline'>{mostLikedDay}</span></p>
+          <MostDataArticles
+            mostLikedArticles={mostLikedArticles}
+            leastLikedArticles={leastLikedArticles}
+          />
         </div>
       </section>
 
@@ -175,7 +206,7 @@ export default function DashboardComp() {
             {users &&
               users.map((user) => (
                 <Table.Body key={user._id} className='divide-y'>
-                  <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
+                  <Table.Row className='bg-white hover:bg-zinc-500 hover:text-zinc-200 dark:border-gray-700 dark:bg-gray-800 transition-colors'>
                     <Table.Cell>
                       <img
                         src={user.profilePicture}
@@ -206,7 +237,7 @@ export default function DashboardComp() {
             {comments &&
               comments.map((comment) => (
                 <Table.Body key={comment._id} className='divide-y'>
-                  <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
+                  <Table.Row className='bg-white hover:bg-zinc-500 hover:text-zinc-200 dark:border-gray-700 dark:bg-gray-800 transition-colors'>
                     <Table.Cell className='w-96'>
                         <p className='line-clamp-2'>{comment.content}</p>
                     </Table.Cell>
@@ -217,7 +248,7 @@ export default function DashboardComp() {
           </Table>
         </div>
 
-        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800 py-4 bg-zinc-300 md:px-6 overflow-x-auto'>
+        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800 py-4 bg-zinc-300  md:px-6 overflow-x-auto'>
           <div className='flex justify-between p-3 text-sm font-semibold'>
             <h1 className='text-lg font-semibold py-2'>Recent posts</h1>
             <Button outline gradientDuoTone='purpleToPink'>
@@ -233,7 +264,7 @@ export default function DashboardComp() {
             {posts &&
               posts.map((post) => (
                 <Table.Body key={post._id} className='divide-y'>
-                  <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
+                  <Table.Row className='bg-white hover:bg-zinc-500 hover:text-zinc-200 dark:border-gray-700 dark:bg-gray-800 transition-colors'>
                     <Table.Cell>
                       <img
                         src={post.image}
@@ -250,7 +281,7 @@ export default function DashboardComp() {
           </Table>
         </div>
 
-        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800 py-4 bg-zinc-300 md:px-6 overflow-x-auto'>
+        <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800 py-4 md:px-6 overflow-x-auto'>
           <div className='flex justify-between  p-3 text-sm font-semibold'>
             <h1 className='p-2 text-lg font-semibold'>Recent articles</h1>
             <Button outline gradientDuoTone='purpleToPink'>
@@ -258,17 +289,16 @@ export default function DashboardComp() {
             </Button>
           </div>
           <Table hoverable>
-            <Table.Head>
+            <Table.Head className='bg-zinc-600'>
               <Table.HeadCell>Article image</Table.HeadCell>
               <Table.HeadCell>Article Title</Table.HeadCell>
               <Table.HeadCell>Article Text</Table.HeadCell>
               <Table.HeadCell>Article link url</Table.HeadCell>
-              <Table.HeadCell>Article likes</Table.HeadCell>
             </Table.Head>
             {articles &&
               articles.map((article) => (
                 <Table.Body key={article._id} className='divide-y'>
-                  <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
+                  <Table.Row className='hover:bg-zinc-500 hover:text-zinc-200 dark:border-gray-700 dark:bg-gray-800 transition-colors'>
                     <Table.Cell>
                       <img
                         src={article.image}
@@ -280,7 +310,6 @@ export default function DashboardComp() {
                     <Table.Cell className='w-1/2'>{article.title}</Table.Cell>
                     <Table.Cell className='w-1/2'>{article.text}</Table.Cell>
                     <Table.Cell className='w-1/2'>{article.link}</Table.Cell>
-                    <Table.Cell className='w-1/2'>{article.likes}</Table.Cell>
                   </Table.Row>
                 </Table.Body>
               ))}
